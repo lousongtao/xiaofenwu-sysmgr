@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -47,6 +49,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 	
 	private JTree goodsTree;
 	private JPopupMenu popupmenuRoot = new JPopupMenu();
+	private JMenuItem menuitemScanImport = new JMenuItem(Messages.getString("GoodsMgmtPanel.ScanImport"));
 	private JMenuItem menuitemAddC1 = new JMenuItem(Messages.getString("GoodsMgmtPanel.AddCategory1"));
 	private JMenuItem menuitemRefreshTree = new JMenuItem(Messages.getString("GoodsMgmtPanel.RefreshTree"));
 	private JPopupMenu popupmenuC1 = new JPopupMenu();
@@ -97,6 +100,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		add(tabPane, BorderLayout.CENTER);
 		
 		//build popup menu
+		popupmenuRoot.add(menuitemScanImport);
 		popupmenuRoot.add(menuitemAddC1);
 		popupmenuRoot.add(menuitemRefreshTree);
 		popupmenuC1.add(menuitemModifyC1);
@@ -109,6 +113,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		popupmenuGoods.add(menuitemImportGoods);
 		popupmenuGoods.add(menuitemDeleteGoods);
 		
+		menuitemScanImport.addActionListener(this);
 		menuitemAddC1.addActionListener(this);
 		menuitemRefreshTree.addActionListener(this);
 		menuitemModifyC1.addActionListener(this);
@@ -191,6 +196,15 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		if (e.getSource() == menuitemAddC1){
 			Category1Panel p = new Category1Panel(this);
 			CommonDialog dlg = new CommonDialog(mainFrame, p, Messages.getString("GoodsMgmtPanel.AddCategory1"), 300, 300);
+			dlg.setVisible(true);
+		} else if (e.getSource() == menuitemScanImport) {
+			final ImportGoodsPanel p = new ImportGoodsPanel(this);
+			CommonDialog dlg = new CommonDialog(mainFrame, p, Messages.getString("GoodsMgmtPanel.ImportGoods"), 300, 300);
+			dlg.addWindowFocusListener(new WindowAdapter(){
+				public void windowGainedFocus(WindowEvent e) {
+			        p.putFocusOnBarcode();
+			    }
+			});
 			dlg.setVisible(true);
 		} else if (e.getSource() == menuitemRefreshTree){
 			mainFrame.reloadListCategory1s();

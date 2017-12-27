@@ -33,7 +33,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 	private GoodsMgmtPanel parent;
 	private JTextField tfName= new JTextField(155);
 	private JTextField tfBarcode= new JTextField(155);
-	private NumberTextField tfDisplaySeq= new NumberTextField(false);
+//	private NumberTextField tfDisplaySeq= new NumberTextField(false);
 	private NumberTextField tfBuyPrice= new NumberTextField(true);
 	private NumberTextField tfSellPrice= new NumberTextField(true);
 	private NumberTextField tfMemberPrice= new NumberTextField(true);
@@ -70,7 +70,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 	
 	private void initUI(){
 		JLabel lbName = new JLabel("Name");
-		JLabel lbDisplaySeq = new JLabel("Display Sequence");
+//		JLabel lbDisplaySeq = new JLabel("Display Sequence");
 		JLabel lbCategory2 = new JLabel("Category2");
 		JLabel lbBarcode = new JLabel("Barcode");
 		JLabel lbBuyPrice = new JLabel("Buy Price");
@@ -83,7 +83,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		
 		tfName.setMinimumSize(new Dimension(180, 25));
 		tfBarcode.setMinimumSize(new Dimension(180, 25));
-		tfDisplaySeq.setMinimumSize(new Dimension(180,25));
+//		tfDisplaySeq.setMinimumSize(new Dimension(180,25));
 		tfBuyPrice.setMinimumSize(new Dimension(180, 25));
 		tfSellPrice.setMinimumSize(new Dimension(180, 25));
 		tfMemberPrice.setMinimumSize(new Dimension(180, 25));
@@ -98,9 +98,9 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		add(lbBarcode, 	new GridBagConstraints(0, row, 1, 1,0,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
 		add(tfBarcode, 	new GridBagConstraints(1, row, 1, 1,1,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
 		row++;
-		add(lbDisplaySeq, new GridBagConstraints(0, row, 1, 1,0,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
-		add(tfDisplaySeq, new GridBagConstraints(1, row, 1, 1,1,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
-		row++;
+//		add(lbDisplaySeq, new GridBagConstraints(0, row, 1, 1,0,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
+//		add(tfDisplaySeq, new GridBagConstraints(1, row, 1, 1,1,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
+//		row++;
 		add(lbBuyPrice, 	new GridBagConstraints(0, row, 1, 1,0,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
 		add(tfBuyPrice, 	new GridBagConstraints(1, row, 1, 1,1,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
 		row++;
@@ -129,7 +129,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		HashMap<String, String> params = new HashMap<>();
 		params.put("userId", String.valueOf(MainFrame.getLoginUser().getId()));
 		params.put("name", tfName.getText());
-		params.put("sequence", tfDisplaySeq.getText());
+//		params.put("sequence", tfDisplaySeq.getText());
 		params.put("barcode", tfBarcode.getText());
 		params.put("buyPrice", tfBuyPrice.getText());
 		params.put("sellPrice", tfSellPrice.getText());
@@ -170,10 +170,10 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 			JOptionPane.showMessageDialog(this, "Please input Name");
 			return false;
 		}
-		if (tfDisplaySeq.getText() == null || tfDisplaySeq.getText().length() == 0){
-			JOptionPane.showMessageDialog(this, "Please input Display Sequence");
-			return false;
-		}
+//		if (tfDisplaySeq.getText() == null || tfDisplaySeq.getText().length() == 0){
+//			JOptionPane.showMessageDialog(this, "Please input Display Sequence");
+//			return false;
+//		}
 		if (tfBuyPrice.getText() == null || tfBuyPrice.getText().length() == 0){
 			JOptionPane.showMessageDialog(this, "Please input Buy Price");
 			return false;
@@ -204,7 +204,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 	public void setObjectValue(Goods goods){
 		this.goods = goods;
 		tfName.setText(goods.getName());
-		tfDisplaySeq.setText(goods.getSequence()+"");
+//		tfDisplaySeq.setText(goods.getSequence()+"");
 		tfBuyPrice.setText(goods.getBuyPrice()+"");
 		tfSellPrice.setText(goods.getSellPrice()+"");
 		tfMemberPrice.setText(goods.getMemberPrice()+"");

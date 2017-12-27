@@ -245,6 +245,25 @@ public class MainFrame extends JFrame implements ActionListener{
 	public void setConfigMap(HashMap<String, String> configsMap) {
 		this.configsMap = configsMap;
 	}
+	
+	public Goods getGoodsByBarcode(String barcode){
+		if (listCategory1s == null)
+			return null;
+		for(Category1 c1 : listCategory1s){
+			if (c1.getCategory2s() != null){
+				for(Category2 c2 : c1.getCategory2s()){
+					if (c2.getGoods() != null){
+						for(Goods goods : c2.getGoods()){
+							if (barcode.equals(goods.getBarcode())){
+								return goods;
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
 
 	public static UserData getLoginUser() {
 		return loginUser;
