@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -23,6 +24,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
+import com.shuishou.sysmgr.ConstantValue;
 import com.shuishou.sysmgr.Messages;
 import com.shuishou.sysmgr.beans.Category1;
 import com.shuishou.sysmgr.beans.Category2;
@@ -38,6 +40,7 @@ import com.shuishou.sysmgr.ui.discounttemplate.DiscountTemplateMgmtPanel;
 import com.shuishou.sysmgr.ui.goods.GoodsMgmtPanel;
 import com.shuishou.sysmgr.ui.member.MemberQueryPanel;
 import com.shuishou.sysmgr.ui.payway.PayWayMgmtPanel;
+import com.shuishou.sysmgr.ui.query.IndentQueryPanel;
 import com.shuishou.sysmgr.ui.query.LogQueryPanel;
 import com.shuishou.sysmgr.ui.query.ShiftworkQueryPanel;
 import com.shuishou.sysmgr.ui.statistics.StatisticsPanel;
@@ -81,6 +84,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private DiscountTemplateMgmtPanel pDiscountTemplate;
 	private PayWayMgmtPanel pPayWay;
 	private LogQueryPanel pQueryLog;
+	private IndentQueryPanel pQueryIndent;
 	private ShiftworkQueryPanel pQueryShiftwork;
 	private StatisticsPanel pStatistics;
 	
@@ -216,6 +220,16 @@ public class MainFrame extends JFrame implements ActionListener{
 				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_LOGQUERY);
 			}
 			this.setTitle(Messages.getString("MainFrame.FrameTitle") + " - " + btnQueryLog.getText());
+		} else if (e.getSource() == btnQueryIndent){
+			if (pQueryIndent == null){
+				pQueryIndent = new IndentQueryPanel(this);
+				pContent.add(pQueryIndent, CARDLAYOUT_INDENTQUERY);
+				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_INDENTQUERY);
+				pContent.updateUI();
+			} else {
+				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_INDENTQUERY);
+			}
+			this.setTitle(Messages.getString("MainFrame.FrameTitle") + " - " + btnQueryIndent.getText());
 		} else if (e.getSource() == btnQuerySwiftWork){
 			if (pQueryShiftwork == null){
 				pQueryShiftwork = new ShiftworkQueryPanel(this);
@@ -338,6 +352,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			
 			@Override
 			public void uncaughtException(Thread t, Throwable e) {
+				MainFrame.logger.error(ConstantValue.DFYMDHMS.format(new Date()));
 				MainFrame.logger.error("", e);
 				e.printStackTrace();
 			}

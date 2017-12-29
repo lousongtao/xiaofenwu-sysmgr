@@ -86,9 +86,11 @@ public class ImportGoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 	}
 	
 	private void initData(Goods goods){
-		tfName.setText(goods.getName());
-		tfCurrentAmount.setText(goods.getLeftAmount() + "");
-		tfBarcode.setText(goods.getBarcode());
+		if (goods != null){
+			tfName.setText(goods.getName());
+			tfCurrentAmount.setText(goods.getLeftAmount() + "");
+			tfBarcode.setText(goods.getBarcode());
+		}
 	}
 
 	@Override

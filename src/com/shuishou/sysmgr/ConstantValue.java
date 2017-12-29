@@ -79,13 +79,11 @@ public class ConstantValue {
 	public static final byte DISH_PURCHASETYPE_UNIT = 1;
 	public static final byte DISH_PURCHASETYPE_WEIGHT = 2;
 	
-	public static final String CONFIGS_CONFIRMCODE = "CONFIRMCODE";
+	public static final String CONFIGS_BRANCHNAME= "BRANCHNAME";
 	public static final String CONFIGS_OPENCASHDRAWERCODE = "OPENCASHDRAWERCODE";
-	public static final String CONFIGS_LANGUAGEAMOUNT = "LANGUAGEAMOUNT";
-	public static final String CONFIGS_FIRSTLANGUAGENAME= "FIRSTLANGUAGENAME";
-	public static final String CONFIGS_FIRSTLANGUAGEABBR = "FIRSTLANGUAGEABBR";
-	public static final String CONFIGS_SECONDLANGUAGENAME= "SECONDLANGUAGENAME";
-	public static final String CONFIGS_SECONDLANGUAGEABBR = "SECONDLANGUAGEABBR";
+	public static final String CONFIGS_MEMBERMGR_BYSCORE= "MEMBERMGR_BYSCORE";
+	public static final String CONFIGS_MEMBERMGR_BYDEPOSIT = "MEMBERMGR_BYDEPOSIT";
+	public static final String CONFIGS_MEMBERMGR_SCOREPERDOLLAR = "MEMBERMGR_SCOREPERDOLLAR";
 	
 	public static final int STATISTICS_DIMENSTION_PAYWAY = 1;
 	public static final int STATISTICS_DIMENSTION_SELL = 2;
