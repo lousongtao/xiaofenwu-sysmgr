@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
@@ -38,6 +40,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 	private NumberTextField tfSellPrice= new NumberTextField(true);
 	private NumberTextField tfMemberPrice= new NumberTextField(true);
 	private NumberTextField tfLeftAmount= new NumberTextField(false);
+	private JTextArea taDescription = new JTextArea();
 	private JLabel lbLeftAmount = new JLabel("Left Amount");
 	private JComboBox cbCategory2 = new JComboBox();
 	private Goods goods;
@@ -76,7 +79,8 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		JLabel lbBuyPrice = new JLabel("Buy Price");
 		JLabel lbSellPrice = new JLabel("Sell Price");
 		JLabel lbMemberPrice = new JLabel("Member Price");
-		
+		JLabel lbDescription = new JLabel("Description");
+		JScrollPane jspDescription = new JScrollPane(taDescription, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		cbCategory2.setRenderer(new Category2ListRender());
 		
 		tfLeftAmount.setText("0");
@@ -89,7 +93,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		tfMemberPrice.setMinimumSize(new Dimension(180, 25));
 		tfLeftAmount.setMinimumSize(new Dimension(180, 25));
 		cbCategory2.setMinimumSize(new Dimension(180,25));
-		
+		jspDescription.setMinimumSize(new Dimension(180, 100));
 		setLayout(new GridBagLayout());
 		int row = 0;
 		add(lbName, 		new GridBagConstraints(0, row, 1, 1,0,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
@@ -116,6 +120,9 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		add(lbLeftAmount, new GridBagConstraints(0, row, 1, 1,1,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
 		add(tfLeftAmount, new GridBagConstraints(1, row, 1, 1,1,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
 		row++;
+		add(lbDescription, new GridBagConstraints(0, row, 1, 1,1,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
+		add(jspDescription, new GridBagConstraints(1, row, 1, 1,1,0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(10,0,0,0), 0, 0));
+		row++;
 		add(new JPanel(), new GridBagConstraints(0, row, 1, 1,0,1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(10,0,0,0), 0, 0));
 		
 		
@@ -136,7 +143,10 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		params.put("memberPrice", tfMemberPrice.getText());
 		params.put("leftAmount", tfLeftAmount.getText());
 		params.put("category2Id", String.valueOf(((Category2)cbCategory2.getSelectedItem()).getId()));
-		
+		if (taDescription.getText() != null && taDescription.getText().length() > 0)
+			params.put("description", taDescription.getText());
+		else 
+			params.put("description", "");
 		String url = "goods/add_goods";
 		if (goods != null){
 			url = "goods/update_goods";
@@ -198,6 +208,10 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 			JOptionPane.showMessageDialog(this, "Please input Category2");
 			return false;
 		}
+		if (taDescription.getText() != null && taDescription.getText().length() > 255){
+			JOptionPane.showMessageDialog(this, "The length of description is too long.");
+			return false;
+		}
 		return true;
 	}
 	
@@ -211,6 +225,11 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		tfBarcode.setText(goods.getBarcode()+"");
 		tfLeftAmount.setText(goods.getLeftAmount()+"");
 		cbCategory2.setSelectedItem(goods.getCategory2());
+		if (goods.getDescription() != null){
+			taDescription.setText(goods.getDescription());
+		} else {
+			taDescription.setText("");
+		}
 	}
 	
 	public void refreshCategory2List(){

@@ -239,14 +239,14 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		} else if (e.getSource() == menuitemAddGoods){
 			GoodsTreeNode node = (GoodsTreeNode) goodsTree.getLastSelectedPathComponent();
 			GoodsPanel p = new GoodsPanel(this, (Category2)node.getUserObject());
-			CommonDialog dlg = new CommonDialog(mainFrame, p, Messages.getString("GoodsMgmtPanel.AddGoods"), 300, 400);
+			CommonDialog dlg = new CommonDialog(mainFrame, p, Messages.getString("GoodsMgmtPanel.AddGoods"), 300, 500);
 			dlg.setVisible(true);
 		} else if (e.getSource() == menuitemModifyGoods){
 			GoodsPanel p = new GoodsPanel(this);
 			p.hideLeftAmout();//cannot change leftamount in modify
 			GoodsTreeNode node = (GoodsTreeNode) goodsTree.getLastSelectedPathComponent();
 			p.setObjectValue((Goods)node.getUserObject());
-			CommonDialog dlg = new CommonDialog(mainFrame, p, Messages.getString("GoodsMgmtPanel.ModifyGoods"), 300, 400);
+			CommonDialog dlg = new CommonDialog(mainFrame, p, Messages.getString("GoodsMgmtPanel.ModifyGoods"), 300, 500);
 			dlg.setVisible(true);
 		} else if (e.getSource() == menuitemDeleteGoods){
 			GoodsTreeNode node = (GoodsTreeNode) goodsTree.getLastSelectedPathComponent();
