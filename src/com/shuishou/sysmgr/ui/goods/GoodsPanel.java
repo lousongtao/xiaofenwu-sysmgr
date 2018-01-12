@@ -37,6 +37,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 	private JTextField tfBarcode= new JTextField(155);
 //	private NumberTextField tfDisplaySeq= new NumberTextField(false);
 	private NumberTextField tfBuyPrice= new NumberTextField(true);
+	private NumberTextField tfTradePrice= new NumberTextField(true);//批发价
 	private NumberTextField tfSellPrice= new NumberTextField(true);
 	private NumberTextField tfMemberPrice= new NumberTextField(true);
 	private NumberTextField tfLeftAmount= new NumberTextField(false);
@@ -77,6 +78,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		JLabel lbCategory2 = new JLabel("Category2");
 		JLabel lbBarcode = new JLabel("Barcode");
 		JLabel lbBuyPrice = new JLabel("Buy Price");
+		JLabel lbTradePrice = new JLabel("Trade Price");
 		JLabel lbSellPrice = new JLabel("Sell Price");
 		JLabel lbMemberPrice = new JLabel("Member Price");
 		JLabel lbDescription = new JLabel("Description");
@@ -87,7 +89,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		
 		tfName.setMinimumSize(new Dimension(180, 25));
 		tfBarcode.setMinimumSize(new Dimension(180, 25));
-//		tfDisplaySeq.setMinimumSize(new Dimension(180,25));
+		tfTradePrice.setMinimumSize(new Dimension(180,25));
 		tfBuyPrice.setMinimumSize(new Dimension(180, 25));
 		tfSellPrice.setMinimumSize(new Dimension(180, 25));
 		tfMemberPrice.setMinimumSize(new Dimension(180, 25));
@@ -107,6 +109,9 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 //		row++;
 		add(lbBuyPrice, 	new GridBagConstraints(0, row, 1, 1,0,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
 		add(tfBuyPrice, 	new GridBagConstraints(1, row, 1, 1,1,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
+		row++;
+		add(lbTradePrice, 	new GridBagConstraints(0, row, 1, 1,0,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
+		add(tfTradePrice, 	new GridBagConstraints(1, row, 1, 1,1,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
 		row++;
 		add(lbSellPrice, 	new GridBagConstraints(0, row, 1, 1,0,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
 		add(tfSellPrice, 	new GridBagConstraints(1, row, 1, 1,1,0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10,0,0,0), 0, 0));
@@ -140,6 +145,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		params.put("barcode", tfBarcode.getText());
 		params.put("buyPrice", tfBuyPrice.getText());
 		params.put("sellPrice", tfSellPrice.getText());
+		params.put("tradePrice", tfTradePrice.getText());
 		params.put("memberPrice", tfMemberPrice.getText());
 		params.put("leftAmount", tfLeftAmount.getText());
 		params.put("category2Id", String.valueOf(((Category2)cbCategory2.getSelectedItem()).getId()));
@@ -188,6 +194,10 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 			JOptionPane.showMessageDialog(this, "Please input Buy Price");
 			return false;
 		}
+		if (tfTradePrice.getText() == null || tfTradePrice.getText().length() == 0){
+			JOptionPane.showMessageDialog(this, "Please input Trade Price");
+			return false;
+		}
 		if (tfSellPrice.getText() == null || tfSellPrice.getText().length() == 0){
 			JOptionPane.showMessageDialog(this, "Please input Sell Price");
 			return false;
@@ -220,6 +230,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		tfName.setText(goods.getName());
 //		tfDisplaySeq.setText(goods.getSequence()+"");
 		tfBuyPrice.setText(goods.getBuyPrice()+"");
+		tfTradePrice.setText(goods.getTradePrice()+"");
 		tfSellPrice.setText(goods.getSellPrice()+"");
 		tfMemberPrice.setText(goods.getMemberPrice()+"");
 		tfBarcode.setText(goods.getBarcode()+"");

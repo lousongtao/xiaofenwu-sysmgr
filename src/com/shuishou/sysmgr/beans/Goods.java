@@ -1,7 +1,9 @@
 package com.shuishou.sysmgr.beans;
 
+
 public class Goods {
-private int id;
+
+	private int id;
 	
 	private String name;
 	
@@ -20,6 +22,39 @@ private int id;
 	private int leftAmount;
 	
 	private String description;
+	
+	private double tradePrice;
+	
+	//是否积分
+	private Boolean isScore = true;
+	
+	//搜索码
+	private String searchCode; 
+
+	
+	public double getTradePrice() {
+		return tradePrice;
+	}
+
+	public void setTradePrice(double tradePrice) {
+		this.tradePrice = tradePrice;
+	}
+
+	public Boolean getIsScore() {
+		return isScore;
+	}
+
+	public void setIsScore(Boolean isScore) {
+		this.isScore = isScore;
+	}
+
+	public String getSearchCode() {
+		return searchCode;
+	}
+
+	public void setSearchCode(String searchCode) {
+		this.searchCode = searchCode;
+	}
 
 	public int getId() {
 		return id;

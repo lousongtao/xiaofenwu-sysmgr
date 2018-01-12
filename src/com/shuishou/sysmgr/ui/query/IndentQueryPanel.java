@@ -129,7 +129,7 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", MainFrame.getLoginUser().getId() + "");
 		if (tfMemberCard.getText() != null && tfMemberCard.getText().length() > 0)
-			params.put("memberCard",tfMemberCard.getText());
+			params.put("member",tfMemberCard.getText());
 		if (dpStartDate.getModel() != null && dpStartDate.getModel().getValue() != null){
 			Calendar c = (Calendar)dpStartDate.getModel().getValue();
 			c.set(Calendar.HOUR_OF_DAY, 0);
