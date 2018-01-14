@@ -11,8 +11,7 @@ public class StatPeriodSellModel extends AbstractTableModel{
 	private String[] header = new String[]{
 			Messages.getString("StatPeriodSellModel.Header.ObjName"),
 			Messages.getString("StatModel.Header.Price"), 
-			Messages.getString("StatModel.Header.Amount"), 
-			Messages.getString("StatModel.Header.Weight")};
+			Messages.getString("StatModel.Header.Amount")};
 	
 	private ArrayList<StatItem> statItems;
 	public StatPeriodSellModel(ArrayList<StatItem> statItems){
@@ -39,8 +38,6 @@ public class StatPeriodSellModel extends AbstractTableModel{
 			return item.paidPrice;
 		case 2:
 			return item.soldAmount;
-		case 3:
-			return item.weight;
 		}
 		return "";
 	}

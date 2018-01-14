@@ -9,6 +9,8 @@ public class ConstantValue {
 	public static final DateFormat DFHMS = new SimpleDateFormat("HH:mm:ss");
 	public static final DateFormat DFYMD = new SimpleDateFormat("yyyy/MM/dd");
 	
+	public static final String FORMAT_DOUBLE = "%.2f";
+	
 	public static final Font FONT_30BOLD = new Font(null, Font.BOLD, 30);
 	public static final Font FONT_30PLAIN = new Font(null, Font.PLAIN, 30);	
 	public static final Font FONT_20BOLD = new Font(null, Font.BOLD, 20);
@@ -89,7 +91,7 @@ public class ConstantValue {
 	public static final int STATISTICS_DIMENSTION_SELL = 2;
 	public static final int STATISTICS_DIMENSTION_PERIODSELL = 3;
 	
-	public static final int STATISTICS_SELLGRANULARITY_BYDISH = 1;
+	public static final int STATISTICS_SELLGRANULARITY_BYGOODS = 1;
 	public static final int STATISTICS_SELLGRANULARITY_BYCATEGORY2 = 2;
 	public static final int STATISTICS_SELLGRANULARITY_BYCATEGORY1 = 3;
 	

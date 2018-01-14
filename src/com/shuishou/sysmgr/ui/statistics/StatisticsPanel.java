@@ -69,7 +69,7 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 	private JRadioButton rbPayway = new JRadioButton(Messages.getString("StatisticsPanel.Payway"));
 	private JRadioButton rbSell = new JRadioButton(Messages.getString("StatisticsPanel.Sell"));
 	private JRadioButton rbPeriodSell = new JRadioButton(Messages.getString("StatisticsPanel.PeriodSell"));
-	private JRadioButton rbSellByDish = new JRadioButton(Messages.getString("StatisticsPanel.ByDish"));
+	private JRadioButton rbSellByGoods = new JRadioButton(Messages.getString("StatisticsPanel.ByGoods"));
 	private JRadioButton rbSellByCategory1 = new JRadioButton(Messages.getString("StatisticsPanel.ByCategory1"));
 	private JRadioButton rbSellByCategory2 = new JRadioButton(Messages.getString("StatisticsPanel.ByCategory2"));
 	private JRadioButton rbSellByPeriodPerDay = new JRadioButton(Messages.getString("StatisticsPanel.PerDay"));
@@ -86,6 +86,7 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 	private JTable tabReport = new JTable();
 	private JPanel pDimensionParam = new JPanel(new CardLayout());
 	private JPanel pChart = new JPanel(new GridLayout(0, 1));
+	private JLabel lbTotalInfo = new JLabel();
 	private IntComparator intComp = new IntComparator();
 	private DoubleComparator doubleComp = new DoubleComparator();
 	private StringComparator stringComp = new StringComparator();
@@ -99,8 +100,11 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 		tabReport.setAutoCreateRowSorter(false);
 		JPanel pReport = new JPanel(new GridLayout());
 		JScrollPane jspTable = new JScrollPane(tabReport, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JPanel pData = new JPanel(new BorderLayout());
+		pData.add(jspTable, BorderLayout.CENTER);
+		pData.add(lbTotalInfo, BorderLayout.SOUTH);
 		JScrollPane jspChart = new JScrollPane(pChart, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		pReport.add(jspTable);
+		pReport.add(pData);
 		pReport.add(jspChart);
 		
 		ButtonGroup bgDimension = new ButtonGroup();
@@ -111,8 +115,8 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 		ButtonGroup bgSellGranularity = new ButtonGroup();
 		bgSellGranularity.add(rbSellByCategory1);
 		bgSellGranularity.add(rbSellByCategory2);
-		bgSellGranularity.add(rbSellByDish);
-		rbSellByDish.setSelected(true);
+		bgSellGranularity.add(rbSellByGoods);
+		rbSellByGoods.setSelected(true);
 		ButtonGroup bgSellPeriod = new ButtonGroup();
 		bgSellPeriod.add(rbSellByPeriodPerDay);
 		bgSellPeriod.add(rbSellByPeriodPerHour);
@@ -120,7 +124,7 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 		
 		JPanel pSellGranularity = new JPanel(new GridLayout(0, 1));
 		pSellGranularity.setBorder(BorderFactory.createTitledBorder(Messages.getString("StatisticsPanel.SellGranularity")));
-		pSellGranularity.add(rbSellByDish);
+		pSellGranularity.add(rbSellByGoods);
 		pSellGranularity.add(rbSellByCategory2);
 		pSellGranularity.add(rbSellByCategory1);
 		
@@ -212,8 +216,8 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 			params.put("statisticsDimension", ConstantValue.STATISTICS_DIMENSTION_PAYWAY+"");
 		} else if (rbSell.isSelected()){
 			params.put("statisticsDimension", ConstantValue.STATISTICS_DIMENSTION_SELL+"");
-			if (rbSellByDish.isSelected()){
-				params.put("sellGranularity", ConstantValue.STATISTICS_SELLGRANULARITY_BYDISH+"");
+			if (rbSellByGoods.isSelected()){
+				params.put("sellGranularity", ConstantValue.STATISTICS_SELLGRANULARITY_BYGOODS+"");
 			} else if (rbSellByCategory1.isSelected()){
 				params.put("sellGranularity", ConstantValue.STATISTICS_SELLGRANULARITY_BYCATEGORY1+"");
 			} else if (rbSellByCategory2.isSelected()){
@@ -250,6 +254,14 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 			
 			tabReport.setAutoCreateRowSorter(false);
 			showPaywayChart(result.data);
+			double totalMoney = 0;
+			int totalAmount = 0;
+			for (int i = 0; i < result.data.size(); i++) {
+				totalMoney += result.data.get(i).paidPrice;
+				totalAmount += result.data.get(i).soldAmount;
+			}
+			lbTotalInfo.setText("record : " + tabReport.getRowCount()
+					+ ", money : $" + String.format("%.2f", totalMoney) + ", amount : " + totalAmount);
 		} else if (rbSell.isSelected()){
 			AbstractTableModel model = new StatSellModel(result.data);
 			tabReport.setModel(model);
@@ -261,6 +273,16 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 			
 			tabReport.setAutoCreateRowSorter(false);
 			showSellChart(result.data);
+			double totalPrice = 0;
+			int totalAmount = 0;
+			double totalWeight = 0;
+			for (int i = 0; i < result.data.size(); i++) {
+				totalPrice += result.data.get(i).totalPrice;
+				totalAmount += result.data.get(i).soldAmount;
+				totalWeight += result.data.get(i).weight;
+			}
+			lbTotalInfo.setText("record : " + tabReport.getRowCount()
+					+ ", money : $" + String.format("%.2f", totalPrice) + ", amount : " + totalAmount);
 		} else if (rbPeriodSell.isSelected()){
 			ArrayList<StatItem> sis = result.data;
 			if (cbHideEmptyPeriod.isSelected()){
@@ -281,6 +303,16 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 			tabReport.setAutoCreateRowSorter(false);
 			tabReport.getRowSorter().toggleSortOrder(0);
 			showPeriodSellChart(result.data);
+			double totalMoney = 0;
+			int totalAmount = 0;
+			double totalWeight = 0;
+			for (int i = 0; i < result.data.size(); i++) {
+				totalMoney += result.data.get(i).paidPrice;
+				totalAmount += result.data.get(i).soldAmount;
+				totalWeight += result.data.get(i).weight;
+			}
+			lbTotalInfo.setText("record : " + tabReport.getRowCount()
+					+ ", money : $" + String.format("%.2f", totalMoney) + ", amount : " + totalAmount);
 		}
 	}
 	
@@ -329,7 +361,7 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 		pChart.add(cpPie);
 		
 		
-		JFreeChart barChart = ChartFactory.createBarChart(Messages.getString("StatisticsPanel.Sell"), "dish", "sold", barDataset);
+		JFreeChart barChart = ChartFactory.createBarChart(Messages.getString("StatisticsPanel.Sell"), "goods", "sold", barDataset);
 		ChartPanel cpBar = new ChartPanel(barChart);
 		pChart.add(cpBar);
 		pChart.updateUI();
@@ -357,7 +389,7 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 		ChartPanel cpPie = new ChartPanel(pieChart);
 		pChart.add(cpPie);
 		
-		JFreeChart barChart = ChartFactory.createBarChart(Messages.getString("StatisticsPanel.Sell"), "dish", "sold", barDataset);
+		JFreeChart barChart = ChartFactory.createBarChart(Messages.getString("StatisticsPanel.Sell"), "goods", "sold", barDataset);
 		ChartPanel cpBar = new ChartPanel(barChart);
 		pChart.add(cpBar);
 		pChart.updateUI();

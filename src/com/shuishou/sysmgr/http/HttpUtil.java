@@ -44,6 +44,7 @@ import com.shuishou.sysmgr.beans.Category1;
 import com.shuishou.sysmgr.beans.Category2;
 import com.shuishou.sysmgr.beans.DiscountTemplate;
 import com.shuishou.sysmgr.beans.Goods;
+import com.shuishou.sysmgr.beans.GoodsSellRecord;
 import com.shuishou.sysmgr.beans.HttpResult;
 import com.shuishou.sysmgr.beans.PayWay;
 import com.shuishou.sysmgr.beans.Permission;
@@ -358,6 +359,22 @@ public class HttpUtil {
 		if (!result.success){
 			logger.error("return false while loading configs. URL = " + url + ", response = "+response);
 			JOptionPane.showMessageDialog(parent, "return false while loading configs. URL = " + url + ", response = "+response);
+			return null;
+		}
+		return result.data;
+	}
+	
+	public static ArrayList<GoodsSellRecord> loadGoodsSellRecord(JFrame parent, String url, Map<String, String> params){
+		String response = getJSONObjectByPost(url, params, "UTF-8");
+		if (response == null){
+			logger.error("get null from server for loading goods sold record. URL = " + url + ", params = "+ params);
+			JOptionPane.showMessageDialog(parent, "get null from server for loading goods sold record. URL = " + url+ ", params = "+ params);
+			return null;
+		}
+		HttpResult<ArrayList<GoodsSellRecord>> result = new Gson().fromJson(response, new TypeToken<HttpResult<ArrayList<GoodsSellRecord>>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while loading goods sold record. URL = " + url + ", params = "+ params+", response = "+response);
+			JOptionPane.showMessageDialog(parent, "return false while loading goods sold record. URL = " + url + ", params = "+ params + ", response = "+response);
 			return null;
 		}
 		return result.data;

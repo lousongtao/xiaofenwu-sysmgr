@@ -2,6 +2,9 @@ package com.shuishou.sysmgr.ui.goods;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,12 +16,16 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
@@ -31,10 +38,12 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.shuishou.sysmgr.ConstantValue;
 import com.shuishou.sysmgr.Messages;
 import com.shuishou.sysmgr.beans.Category1;
 import com.shuishou.sysmgr.beans.Category2;
 import com.shuishou.sysmgr.beans.Goods;
+import com.shuishou.sysmgr.beans.GoodsSellRecord;
 import com.shuishou.sysmgr.beans.HttpResult;
 import com.shuishou.sysmgr.http.HttpUtil;
 import com.shuishou.sysmgr.ui.CommonDialog;
@@ -45,6 +54,11 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 	private JTabbedPane tabPane;
 	private Category1Panel pCategory1;
 	private Category2Panel pCategory2;
+	private JLabel lbStatistics = new JLabel();
+	private JTextField tfSearchBarcode = new JTextField(); 
+	private JTextField tfSearchName = new JTextField(); 
+	private JButton btnLookfor = new JButton("Find");
+	
 	private GoodsPanel pGoods;
 	
 	private JTree goodsTree;
@@ -64,6 +78,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 	private JMenuItem menuitemModifyGoods = new JMenuItem(Messages.getString("GoodsMgmtPanel.Modify"));
 	private JMenuItem menuitemDeleteGoods = new JMenuItem(Messages.getString("GoodsMgmtPanel.Delete"));
 	private JMenuItem menuitemImportGoods = new JMenuItem(Messages.getString("GoodsMgmtPanel.ImportGoods"));
+	private JMenuItem menuitemQuerySoldRecord = new JMenuItem(Messages.getString("GoodsMgmtPanel.QueryGoodsSoldRecord"));
 	
 	private ArrayList<Category1> category1s ;
 	private MainFrame mainFrame;
@@ -86,6 +101,25 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		d.width = 300;
 		jspTree.setPreferredSize(d);
 		
+		JLabel lbSearchName = new JLabel("Name");
+		JLabel lbSearchBarcode = new JLabel("Barcode");
+		JPanel pSearch = new JPanel(new GridBagLayout());
+		pSearch.setBorder(BorderFactory.createTitledBorder("Look for"));
+		pSearch.add(lbSearchName,	new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 0, 0, 0), 0, 0));
+		pSearch.add(tfSearchName,	new GridBagConstraints(1, 0, 2, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 0, 0, 0), 0, 0));
+		pSearch.add(lbSearchBarcode,new GridBagConstraints(0, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 0, 0, 0), 0, 0));
+		pSearch.add(tfSearchBarcode,new GridBagConstraints(1, 1, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 0, 0, 0), 0, 0));
+		pSearch.add(btnLookfor,		new GridBagConstraints(2, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 0, 0, 0), 0, 0));
+		
+		JButton btnTest = new JButton("Test");
+		pSearch.add(btnTest,		new GridBagConstraints(1, 2, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 0, 0, 0), 0, 0));
+		btnTest.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int[] selectrows = goodsTree.getSelectionRows();
+				System.out.println(goodsTree.getLeadSelectionRow());
+			}});
 		//build Tab
 		pCategory1 = new Category1Panel(this);
 		pCategory2 = new Category2Panel(this);
@@ -95,9 +129,18 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		tabPane.add("Category1", pCategory1);
 		tabPane.add("Category2", pCategory2);
 		tabPane.add("Goods", pGoods);
+		
+		JPanel pTab = new JPanel(new BorderLayout());
+		pTab.add(tabPane, BorderLayout.CENTER);
+		pTab.add(lbStatistics, BorderLayout.SOUTH);
+		
+		JPanel pLeft = new JPanel(new BorderLayout());
+		pLeft.add(jspTree, BorderLayout.CENTER);
+		pLeft.add(pSearch, BorderLayout.NORTH);
+		
 		this.setLayout(new BorderLayout());
-		add(jspTree, BorderLayout.WEST);
-		add(tabPane, BorderLayout.CENTER);
+		add(pLeft, BorderLayout.WEST);
+		add(pTab, BorderLayout.CENTER);
 		
 		//build popup menu
 		popupmenuRoot.add(menuitemScanImport);
@@ -112,6 +155,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		popupmenuGoods.add(menuitemModifyGoods);
 		popupmenuGoods.add(menuitemImportGoods);
 		popupmenuGoods.add(menuitemDeleteGoods);
+		popupmenuGoods.add(menuitemQuerySoldRecord);
 		
 		menuitemScanImport.addActionListener(this);
 		menuitemAddC1.addActionListener(this);
@@ -125,6 +169,8 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		menuitemModifyGoods.addActionListener(this);
 		menuitemDeleteGoods.addActionListener(this);
 		menuitemImportGoods.addActionListener(this);
+		menuitemQuerySoldRecord.addActionListener(this);
+		btnLookfor.addActionListener(this);
 		
 		goodsTree.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e) {
@@ -150,6 +196,11 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 	}
 	
 	private void buildTree(GoodsTreeNode root) {
+		int goodsType = 0;//商品类型数量
+		int goodsAmount = 0;//商品总库存量
+		double buyFee = 0; //商品购买价格
+		double tradeFee = 0;//商品批发价格
+		double sellFee = 0;//商品总销售价格
 		if (category1s != null){
 			for (int i = 0; i < category1s.size(); i++) {
 				Category1 c1 = category1s.get(i);
@@ -166,12 +217,21 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 								Goods goods = c2.getGoods().get(k);
 								GoodsTreeNode goodsNode = new GoodsTreeNode(goods);
 								c2node.add(goodsNode);
+								goodsType++;
+								goodsAmount += goods.getLeftAmount();
+								buyFee += goods.getLeftAmount() * goods.getBuyPrice();
+								tradeFee += goods.getLeftAmount() * goods.getTradePrice();
+								sellFee += goods.getLeftAmount() * goods.getSellPrice();
 							}
 						}
 					}
 				}
 			}
 		}
+		lbStatistics.setText("Types: " + goodsType +", Total Amount: "+ goodsAmount 
+				+ ", Purchase Fee: $" + String.format(ConstantValue.FORMAT_DOUBLE, buyFee) 
+				+ ", Trade Fee: $" + String.format(ConstantValue.FORMAT_DOUBLE, tradeFee) 
+				+ ", Sell Price: $" + String.format(ConstantValue.FORMAT_DOUBLE, sellFee));
 	}
 
 	@Override
@@ -256,6 +316,88 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 			ImportGoodsPanel p = new ImportGoodsPanel(this, (Goods)node.getUserObject());
 			CommonDialog dlg = new CommonDialog(mainFrame, p, Messages.getString("GoodsMgmtPanel.ImportGoods"), 300, 300);
 			dlg.setVisible(true);
+		} else if (e.getSource() == btnLookfor){
+			doLookfor();
+		} else if (e.getSource() == menuitemQuerySoldRecord){
+			GoodsTreeNode node = (GoodsTreeNode)goodsTree.getLastSelectedPathComponent();
+			Goods goods = (Goods)node.getUserObject();
+			HashMap<String, String> params = new HashMap<>();
+			params.put("goodsId", goods.getId()+"");
+			ArrayList<GoodsSellRecord> records = HttpUtil.loadGoodsSellRecord(mainFrame, mainFrame.SERVER_URL + "indent/querygoodssoldrecord", params);
+			if (records == null || records.isEmpty()){
+				JOptionPane.showMessageDialog(mainFrame, "Not find record for this goods");
+				return;
+			}
+			GoodsSellRecordDialog dlg = new GoodsSellRecordDialog(mainFrame, "Sold Record - "+ goods.getName(), records, 600, 600);
+			dlg.setVisible(true);
+		}
+	}
+	
+	/**
+	 * Find node as the search condition;
+	 * If both name and barcode are input, must match both to find the node;
+	 * for barcode, must EQUAL the input value.
+	 * for name, just compare part of the name, ignore its capital(no capital sensitive).
+	 * if the current selection is 0 or none, look for from the root node;
+	 * if the current selection is not 0, then loop the nodes firstly, until find the selection node, then start to compare;
+	 * the enumeration using a deep loop algorithm.
+	 */
+	private void doLookfor(){
+		String name = null;
+		String barcode = null;
+		if (tfSearchName.getText() != null && tfSearchName.getText().length() > 0)
+			name = tfSearchName.getText();
+		if (tfSearchBarcode.getText() != null && tfSearchBarcode.getText().length() > 0)
+			barcode = tfSearchBarcode.getText();
+		if (name == null && barcode == null){
+			return;
+		}
+		GoodsTreeNode selectNode = (GoodsTreeNode) goodsTree.getLastSelectedPathComponent();
+		
+		GoodsTreeNode root = (GoodsTreeNode)goodsTree.getModel().getRoot();
+		boolean bStartFlag = false;//until find the selectNode in enumeration, then begin look for
+		if (selectNode == null || selectNode == root){
+			bStartFlag = true;
+		}
+		Enumeration<GoodsTreeNode> e = root.depthFirstEnumeration();
+		boolean bFound = false;
+		while(e.hasMoreElements()){
+			GoodsTreeNode node = e.nextElement();
+			if (!bStartFlag){
+				if (node == selectNode){
+					bStartFlag = true;
+				}
+				continue;
+			}
+			if (node.getUserObject() instanceof Goods){
+				Goods goods = (Goods)node.getUserObject();
+				boolean suitBarcode = false;
+				boolean suitName = false;
+				if (name == null){
+					suitName = true;
+				} else {
+					if (goods.getName().toLowerCase().indexOf(name.toLowerCase()) >= 0){
+						suitName = true;
+					}
+				}
+				if (barcode == null){
+					suitBarcode = true;
+				} else {
+					if (goods.getBarcode().equals(barcode)){
+						suitBarcode = true;
+					}
+				}
+				if (suitName && suitBarcode){
+					TreePath path = new TreePath(node.getPath());
+					goodsTree.setSelectionPath(path);
+					goodsTree.scrollPathToVisible(path);
+					bFound = true;
+					break;
+				}
+			}
+		}
+		if (!bFound){
+			JOptionPane.showMessageDialog(this, "Cannot find goods as the search condition");
 		}
 	}
 	

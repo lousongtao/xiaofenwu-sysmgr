@@ -20,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
 
@@ -78,10 +79,11 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 		table.getColumnModel().getColumn(3).setPreferredWidth(100);
 		table.getColumnModel().getColumn(4).setPreferredWidth(100);
 		table.getColumnModel().getColumn(5).setPreferredWidth(100);
-		table.getColumnModel().getColumn(6).setPreferredWidth(80);
+		table.getColumnModel().getColumn(6).setPreferredWidth(100);
 		table.getColumnModel().getColumn(7).setPreferredWidth(100);
 		table.getColumnModel().getColumn(8).setPreferredWidth(100);
 		table.getColumnModel().getColumn(9).setPreferredWidth(100);
+		table.setAutoCreateRowSorter(true);
 		JScrollPane jspTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
@@ -117,6 +119,8 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 	}
 	
 	private void doQuery(){
+		members.clear();
+		((TableModel)table.getModel()).setRowCount(0);
 		String url = "member/querymember";
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", MainFrame.getLoginUser().getId() + "");
@@ -200,9 +204,9 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 		}
 	}
 	
-	class TableModel extends AbstractTableModel{
+	class TableModel extends DefaultTableModel{
 
-		private String[] header = new String[]{"Name", "Member Card", "Telephone", "Discount Rate", "Address", "Postcode", "Create Time", "Birthday", "Balance Money", "Score"};
+		private String[] header = new String[]{"Name", "Member Card", "Telephone", "Discount Rate", "Create Date","Score", "Balance Money","Address", "Postcode",  "Birthday"};
 		
 		public TableModel(){
 
@@ -231,18 +235,18 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 			case 3:
 				return m.getDiscountRate();
 			case 4:
-				return m.getAddress();
+				return ConstantValue.DFYMD.format(m.getCreateTime());
 			case 5: 
-				return m.getPostCode();
+				return m.getScore();
 			case 6:
-				return ConstantValue.DFYMDHMS.format(m.getCreateTime());
+				return m.getBalanceMoney();
 			case 7:
+				return m.getAddress();
+			case 8:
+				return m.getPostCode();
+			case 9:
 				if (m.getBirth() == null) return "";
 				return ConstantValue.DFYMD.format(m.getBirth());
-			case 8:
-				return m.getBalanceMoney();
-			case 9:
-				return m.getScore();
 			}
 			return "";
 		}
@@ -254,6 +258,21 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 		
 		public Member getObjectAt(int row){
 			return members.get(row);
+		}
+		
+		@Override
+		public Class<?> getColumnClass(int col){
+			switch(col){
+			case 2:
+				return Long.class;
+			case 3:
+				return Double.class;
+			case 5: 
+				return Double.class;
+			case 6:
+				return Double.class;
+			}
+			return String.class;
 		}
 	}
 }
