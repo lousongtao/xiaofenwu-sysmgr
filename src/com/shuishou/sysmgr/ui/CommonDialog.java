@@ -3,6 +3,7 @@ package com.shuishou.sysmgr.ui;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,7 +13,7 @@ import javax.swing.JPanel;
 
 public class CommonDialog extends JDialog implements ActionListener{
 	
-	private MainFrame mainFrame;
+	private Window mainFrame;
 	
 	private JBlockedButton btnSave = new JBlockedButton("save");
 	private JButton btnClose = new JButton("Close");
@@ -20,7 +21,7 @@ public class CommonDialog extends JDialog implements ActionListener{
 	private JPanel content;
 	private int width;
 	private int heigh;
-	public CommonDialog(MainFrame mainFrame, JPanel content, String title, int width, int heigh){
+	public CommonDialog(Window mainFrame, JPanel content, String title, int width, int heigh){
 		this.mainFrame = mainFrame;
 		this.content = content;
 		this.operator = (CommonDialogOperatorIFC)content;

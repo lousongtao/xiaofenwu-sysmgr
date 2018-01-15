@@ -274,5 +274,9 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 			}
 			return String.class;
 		}
+		
+		public boolean isCellEditable(int row, int column) {
+        return false;
+    }
 	}
 }

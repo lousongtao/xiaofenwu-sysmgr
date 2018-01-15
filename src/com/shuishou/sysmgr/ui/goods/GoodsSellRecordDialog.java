@@ -16,13 +16,16 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.log4j.Logger;
+
 import com.shuishou.sysmgr.beans.Goods;
 import com.shuishou.sysmgr.beans.GoodsSellRecord;
 import com.shuishou.sysmgr.ui.MainFrame;
+import com.shuishou.sysmgr.ui.member.MemberQueryPanel;
 
 
 public class GoodsSellRecordDialog extends JDialog{
-
+	private final Logger logger = Logger.getLogger(MemberQueryPanel.class.getName());
 	private JTable table = new JTable();
 	private RecordTableModel model = new RecordTableModel();
 	private MainFrame parent;
@@ -119,5 +122,10 @@ public class GoodsSellRecordDialog extends JDialog{
 		public GoodsSellRecord getObjectAt(int index){
 			return items.get(index);
 		}
+		
+		@Override
+	    public boolean isCellEditable(int row, int column) { 
+	        return false;
+	    }
 	}
 }
