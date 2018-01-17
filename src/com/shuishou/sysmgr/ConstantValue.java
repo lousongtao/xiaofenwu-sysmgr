@@ -59,6 +59,11 @@ public class ConstantValue {
 	public static final String INDENT_PAYWAY_BANKCARD = "bankcard";//刷卡
 	public static final String INDENT_PAYWAY_MEMBER = "member";//会员
 	
+	public static final int INDENT_TYPE_ORDER = 1;//普通订单
+	public static final int INDENT_TYPE_REFUND = 2;//退货单
+	public static final int INDENT_TYPE_PREBUY_PAID = 3;//预购单已付款
+	public static final int INDENT_TYPE_PREBUY_UNPAID = 4;//预购单未付款
+	
 	public static final byte INDENTDETAIL_OPERATIONTYPE_ADD = 1;
 	public static final byte INDENTDETAIL_OPERATIONTYPE_DELETE = 2;
 	public static final byte INDENTDETAIL_OPERATIONTYPE_CHANGEAMOUNT = 5;
@@ -97,4 +102,8 @@ public class ConstantValue {
 	
 	public static final int STATISTICS_PERIODSELL_PERDAY = 1;
 	public static final int STATISTICS_PERIODSELL_PERHOUR = 2;
+	
+	public static final String TICKET_TEMPLATE_PURCHASE = "/purchase_ticket.json";
+	public static final String TICKET_TEMPLATE_REFUND = "/refund_ticket.json";
+	public static final String TICKET_TEMPLATE_PREBUY = "/prebuy_ticket.json";
 }

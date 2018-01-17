@@ -40,7 +40,10 @@ import com.shuishou.sysmgr.beans.HttpResult;
 import com.shuishou.sysmgr.beans.Indent;
 import com.shuishou.sysmgr.beans.IndentDetail;
 import com.shuishou.sysmgr.beans.LogData;
+import com.shuishou.sysmgr.beans.Member;
 import com.shuishou.sysmgr.http.HttpUtil;
+import com.shuishou.sysmgr.printertool.PrintJob;
+import com.shuishou.sysmgr.printertool.PrintQueue;
 import com.shuishou.sysmgr.ui.MainFrame;
 import com.shuishou.sysmgr.ui.components.JDatePicker;
 
@@ -48,6 +51,7 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 	private final Logger logger = Logger.getLogger(IndentQueryPanel.class.getName());
 	private MainFrame mainFrame;
 	private JTextField tfMemberCard = new JTextField();
+	private JTextField tfOrderCode = new JTextField();
 	private JDatePicker dpStartDate = new JDatePicker();
 	private JDatePicker dpEndDate = new JDatePicker();
 	private JButton btnQuery = new JButton("Query");
@@ -67,10 +71,14 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 	}
 	
 	private void initUI(){
-		JLabel lbTableName = new JLabel("Member Card : ");
+		JLabel lbMemberCard = new JLabel("Member Card : ");
+		JLabel lbOrderCode = new JLabel("Order Code : ");
 		JLabel lbStartDate = new JLabel("Start Date : ");
 		JLabel lbEndDate = new JLabel("End Date : ");
-		tfMemberCard.setPreferredSize(new Dimension(150, 25));
+		tfMemberCard.setPreferredSize(new Dimension(120, 25));
+		tfOrderCode.setPreferredSize(new Dimension(120, 25));
+		dpStartDate.setPreferredSize(new Dimension(120, 25));
+		dpEndDate.setPreferredSize(new Dimension(120, 25));
 		dpStartDate.setShowYearButtons(true);
 		dpEndDate.setShowYearButtons(true);
 		
@@ -80,7 +88,8 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		tableIndent.getColumnModel().getColumn(1).setPreferredWidth(80);
 		tableIndent.getColumnModel().getColumn(2).setPreferredWidth(80);
 		tableIndent.getColumnModel().getColumn(3).setPreferredWidth(120);
-		tableIndent.getColumnModel().getColumn(4).setPreferredWidth(250);
+		tableIndent.getColumnModel().getColumn(4).setPreferredWidth(200);
+		tableIndent.getColumnModel().getColumn(5).setPreferredWidth(120);
 		JScrollPane jspTableIndent = new JScrollPane(tableIndent, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		tableIndent.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
@@ -93,15 +102,17 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		tableIndentDetail.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
 		JPanel pCondition = new JPanel(new GridBagLayout());
-		pCondition.add(lbTableName,	new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(tfMemberCard,new GridBagConstraints(1, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(lbStartDate,	new GridBagConstraints(2, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(dpStartDate,	new GridBagConstraints(3, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(lbEndDate,	new GridBagConstraints(4, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(dpEndDate,	new GridBagConstraints(5, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(new JLabel(),new GridBagConstraints(6, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(btnQuery,	new GridBagConstraints(7, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(btnPrintIndent,new GridBagConstraints(8, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		pCondition.add(lbMemberCard,new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		pCondition.add(tfMemberCard,new GridBagConstraints(1, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		pCondition.add(lbOrderCode, new GridBagConstraints(2, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		pCondition.add(tfOrderCode, new GridBagConstraints(3, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		pCondition.add(lbStartDate,	new GridBagConstraints(4, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		pCondition.add(dpStartDate,	new GridBagConstraints(5, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		pCondition.add(lbEndDate,	new GridBagConstraints(6, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		pCondition.add(dpEndDate,	new GridBagConstraints(7, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		pCondition.add(new JLabel(),new GridBagConstraints(8, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		pCondition.add(btnQuery,	  new GridBagConstraints(0, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		pCondition.add(btnPrintIndent,new GridBagConstraints(1, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
 		btnQuery.addActionListener(this);
 		btnPrintIndent.addActionListener(this);
 		
@@ -130,6 +141,8 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		params.put("userId", MainFrame.getLoginUser().getId() + "");
 		if (tfMemberCard.getText() != null && tfMemberCard.getText().length() > 0)
 			params.put("member",tfMemberCard.getText());
+		if (tfOrderCode.getText() != null && tfOrderCode.getText().length() > 0)
+			params.put("indentCode", tfOrderCode.getText());
 		if (dpStartDate.getModel() != null && dpStartDate.getModel().getValue() != null){
 			Calendar c = (Calendar)dpStartDate.getModel().getValue();
 			c.set(Calendar.HOUR_OF_DAY, 0);
@@ -161,28 +174,50 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		tableIndent.updateUI();
 	}
 	
-	private void doPrint(){
-		int row = tableIndent.getSelectedRow();
-		if (row < 0){
-			JOptionPane.showMessageDialog(this, "Please choose a record from Order table.", "Error", JOptionPane.YES_NO_OPTION);
-			return;
+	private void doPrint(Indent indent){
+		Map<String,String> keyMap = new HashMap<String, String>();
+		if (indent.getMemberCard() != null && indent.getMemberCard().length() > 0){
+			//reload member data from server
+			Member member = HttpUtil.doLoadMember(mainFrame, mainFrame.getLoginUser(), indent.getMemberCard());
+			keyMap.put("member", member.getMemberCard() + ", points: " + String.format(ConstantValue.FORMAT_DOUBLE, member.getScore()) 
+				+ ", discount: " + (member.getDiscountRate() * 100) + "%");
+		}else {
+			keyMap.put("member", "");
 		}
-		String url = "indent/printindent";
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("userId", mainFrame.getLoginUser().getId()+"");
-		params.put("indentId", modelIndent.getObjectAt(row).getId()+"");
-		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params, "UTF-8");
-		if (response == null || response.length() == 0){
-			logger.error("get null from server while print indent. URL = " + url + ", param = "+ params);
-			JOptionPane.showMessageDialog(this, "get null from server while print indent. URL = " + url + ", param = "+ params);
-			return;
+		keyMap.put("cashier", mainFrame.getLoginUser().getName());
+		keyMap.put("dateTime", ConstantValue.DFYMDHMS.format(indent.getCreateTime()));
+		keyMap.put("totalPrice", String.format(ConstantValue.FORMAT_DOUBLE, indent.getPaidPrice()));
+		keyMap.put("gst", String.format(ConstantValue.FORMAT_DOUBLE, indent.getPaidPrice()/11));
+		keyMap.put("payWay", indent.getPayWay());
+		keyMap.put("orderNo", indent.getIndentCode());
+			keyMap.put("getcash", "");
+			keyMap.put("change", "");
+		double originPrice = 0;
+		List<Map<String, String>> goods = new ArrayList<>();
+		for (int i = 0; i< indent.getItems().size(); i++) {
+			IndentDetail detail = indent.getItems().get(i);
+//			ChoosedGoods cg = choosedGoods.get(i);
+			Map<String, String> mg = new HashMap<String, String>();
+			mg.put("name", detail.getGoodsName());
+			mg.put("price", String.format(ConstantValue.FORMAT_DOUBLE, detail.getGoodsPrice()));
+			mg.put("amount", detail.getAmount() + "");
+			mg.put("subTotal", String.format(ConstantValue.FORMAT_DOUBLE, detail.getSoldPrice() * detail.getAmount()));
+			originPrice += detail.getGoodsPrice() * detail.getAmount();
+			goods.add(mg);
 		}
-		HttpResult<Indent> result = new Gson().fromJson(response, new TypeToken<HttpResult<Indent>>(){}.getType());
-		if (!result.success){
-			logger.error("return false while print indent. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while print indent. URL = " + url + ", response = "+response);
-			return;
-		}	
+		keyMap.put("originPrice", String.format(ConstantValue.FORMAT_DOUBLE, originPrice));
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("keys", keyMap);
+		params.put("goods", goods);
+		String printfile = ConstantValue.TICKET_TEMPLATE_PURCHASE;
+		if (indent.getIndentType() == ConstantValue.INDENT_TYPE_PREBUY_PAID ||
+				indent.getIndentType() == ConstantValue.INDENT_TYPE_PREBUY_UNPAID){
+			printfile = ConstantValue.TICKET_TEMPLATE_PREBUY;
+		} else if (indent.getIndentType() == ConstantValue.INDENT_TYPE_REFUND){
+			printfile = ConstantValue.TICKET_TEMPLATE_REFUND;
+		}
+		PrintJob job = new PrintJob(printfile, params, mainFrame.printerName);
+		PrintQueue.add(job);
 	}
 	
 	@Override
@@ -190,13 +225,15 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		if (e.getSource() == btnQuery){
 			doQuery();
 		} else if (e.getSource() == btnPrintIndent){
-			doPrint();
+			if (tableIndent.getSelectedRow() < 0)
+				return;
+			doPrint(((IndentModel)tableIndent.getModel()).getObjectAt(tableIndent.getSelectedRow()));
 		} 
 	}
 	
 	class IndentModel extends AbstractTableModel{
 
-		private String[] header = new String[]{"Member Card", "Price", "Paid Price", "Pay Way", "Time"};
+		private String[] header = new String[]{"Member Card", "Price", "Paid Price", "Pay Way", "Time", "Order Code", "Type"};
 		
 		public IndentModel(){
 
@@ -226,6 +263,17 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 				return indent.getPayWay();
 			case 4: 
 				return ConstantValue.DFYMDHMS.format(indent.getCreateTime());
+			case 5:
+				return String.valueOf(indent.getIndentCode());
+			case 6:
+				if (indent.getIndentType() == ConstantValue.INDENT_TYPE_ORDER)
+					return "ORDER";
+				else if (indent.getIndentType() == ConstantValue.INDENT_TYPE_PREBUY_PAID)
+					return "PRE-ORDER-PAID";
+				else if (indent.getIndentType() == ConstantValue.INDENT_TYPE_PREBUY_UNPAID)
+					return "PRE-ORDER-UNPAID";
+				else if (indent.getIndentType() == ConstantValue.INDENT_TYPE_REFUND)
+					return "REFUND";
 			}
 			return "";
 		}
@@ -242,7 +290,7 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 
 	class IndentDetailModel extends AbstractTableModel{
 
-		private String[] header = new String[]{"Name", "Amount", "Price"};
+		private String[] header = new String[]{"Name", "Amount", "Price", "Sold Price"};
 		private ArrayList<IndentDetail> details = new ArrayList<>();
 		public IndentDetailModel(){
 		}
@@ -267,6 +315,8 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 				return detail.getAmount();
 			case 2:
 				return detail.getGoodsPrice();
+			case 3:
+				return detail.getSoldPrice();
 			}
 			return "";
 		}

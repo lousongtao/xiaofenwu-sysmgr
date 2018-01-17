@@ -1,5 +1,6 @@
 package com.shuishou.sysmgr.http;
 
+import java.awt.Window;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -39,6 +40,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.shuishou.sysmgr.beans.Category1;
 import com.shuishou.sysmgr.beans.Category2;
@@ -46,6 +48,7 @@ import com.shuishou.sysmgr.beans.DiscountTemplate;
 import com.shuishou.sysmgr.beans.Goods;
 import com.shuishou.sysmgr.beans.GoodsSellRecord;
 import com.shuishou.sysmgr.beans.HttpResult;
+import com.shuishou.sysmgr.beans.Member;
 import com.shuishou.sysmgr.beans.PayWay;
 import com.shuishou.sysmgr.beans.Permission;
 import com.shuishou.sysmgr.beans.UserData;
@@ -378,5 +381,26 @@ public class HttpUtil {
 			return null;
 		}
 		return result.data;
+	}
+	
+	public static Member doLoadMember(Window parent, UserData user, String memberCard){
+		String url = "member/querymember";
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", user.getId() + "");
+		params.put("memberCard", memberCard);
+		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params, "UTF-8");
+		if (response == null){
+			logger.error("get null from server for query member by membercard. URL = " + url + ", param = "+ params);
+			JOptionPane.showMessageDialog(parent, "get null from server for query member by membercard. URL = " + url);
+			return null;
+		}
+		Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd HH:mm:ss").create();
+		HttpResult<ArrayList<Member>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<Member>>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while query member by membercard. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, "return false while query member by membercard. URL = " + url + ", response = "+response);
+			return null;
+		}
+		return result.data.get(0);
 	}
 }

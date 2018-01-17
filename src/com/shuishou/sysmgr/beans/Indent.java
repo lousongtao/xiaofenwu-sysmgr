@@ -23,6 +23,28 @@ private int id;
 	
 	private String memberCard;
 	
+	private String indentCode;
+	
+	private int indentType;
+	
+	
+	
+	public int getIndentType() {
+		return indentType;
+	}
+
+	public void setIndentType(int indentType) {
+		this.indentType = indentType;
+	}
+
+	public String getIndentCode() {
+		return indentCode;
+	}
+
+	public void setIndentCode(String indentCode) {
+		this.indentCode = indentCode;
+	}
+
 	public int getId() {
 		return id;
 	}

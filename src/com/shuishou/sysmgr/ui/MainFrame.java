@@ -34,6 +34,7 @@ import com.shuishou.sysmgr.beans.PayWay;
 import com.shuishou.sysmgr.beans.Permission;
 import com.shuishou.sysmgr.beans.UserData;
 import com.shuishou.sysmgr.http.HttpUtil;
+import com.shuishou.sysmgr.printertool.PrintThread;
 import com.shuishou.sysmgr.ui.account.AccountMgmtPanel;
 import com.shuishou.sysmgr.ui.config.ConfigsDialog;
 import com.shuishou.sysmgr.ui.discounttemplate.DiscountTemplateMgmtPanel;
@@ -53,6 +54,8 @@ public class MainFrame extends JFrame implements ActionListener{
 	public static int WINDOW_LOCATIONY;
 	public static String language;
 	public static String SERVER_URL;
+	public static String printerName;
+	public static String FONT_PRINTTICKET;
 	private static final String CARDLAYOUT_GOODSMGMT= "goodsmgmt"; 
 	private static final String CARDLAYOUT_MEMBERMGMT= "membermgmt"; 
 	private static final String CARDLAYOUT_ACCOUNTMGMT= "accountmgmt"; 
@@ -97,6 +100,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		setTitle(Messages.getString("MainFrame.FrameTitle")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		initData();
+		//start printer thread
+        new PrintThread().startThread();
 	}
 	
 	private void initData(){
@@ -221,7 +226,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			}
 			this.setTitle(Messages.getString("MainFrame.FrameTitle") + " - " + btnQueryLog.getText());
 		} else if (e.getSource() == btnQueryIndent){
-			if (pQueryIndent == null){
+			if (pQueryIndent == null || 1== 1){
 				pQueryIndent = new IndentQueryPanel(this);
 				pContent.add(pQueryIndent, CARDLAYOUT_INDENTQUERY);
 				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_INDENTQUERY);
@@ -388,6 +393,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		MainFrame.WINDOW_LOCATIONX = Integer.parseInt(prop.getProperty("mainframe.locationx"));
 		MainFrame.WINDOW_LOCATIONY = Integer.parseInt(prop.getProperty("mainframe.locationy"));
 		MainFrame.language = prop.getProperty("language");
+		MainFrame.printerName = prop.getProperty("printerName");
+		MainFrame.FONT_PRINTTICKET = prop.getProperty("printFont");
 		MainFrame f = new MainFrame();
 		
 		f.setVisible(true);
