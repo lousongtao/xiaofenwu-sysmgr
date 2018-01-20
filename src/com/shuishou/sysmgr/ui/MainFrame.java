@@ -226,7 +226,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			}
 			this.setTitle(Messages.getString("MainFrame.FrameTitle") + " - " + btnQueryLog.getText());
 		} else if (e.getSource() == btnQueryIndent){
-			if (pQueryIndent == null || 1== 1){
+			if (pQueryIndent == null){
 				pQueryIndent = new IndentQueryPanel(this);
 				pContent.add(pQueryIndent, CARDLAYOUT_INDENTQUERY);
 				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_INDENTQUERY);

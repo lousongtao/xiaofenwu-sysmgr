@@ -63,6 +63,7 @@ public class ConstantValue {
 	public static final int INDENT_TYPE_REFUND = 2;//退货单
 	public static final int INDENT_TYPE_PREBUY_PAID = 3;//预购单已付款
 	public static final int INDENT_TYPE_PREBUY_UNPAID = 4;//预购单未付款
+	public static final int INDENT_TYPE_PREBUY_FINISHED = 5;//预购单完结,已经转为订单
 	
 	public static final byte INDENTDETAIL_OPERATIONTYPE_ADD = 1;
 	public static final byte INDENTDETAIL_OPERATIONTYPE_DELETE = 2;
@@ -105,5 +106,6 @@ public class ConstantValue {
 	
 	public static final String TICKET_TEMPLATE_PURCHASE = "/purchase_ticket.json";
 	public static final String TICKET_TEMPLATE_REFUND = "/refund_ticket.json";
-	public static final String TICKET_TEMPLATE_PREBUY = "/prebuy_ticket.json";
+	public static final String TICKET_TEMPLATE_PREBUY = "/preorder_ticket.json";
+	public static final String TICKET_TEMPLATE_SHIFTWORK = "/shiftwork_ticket.json";
 }

@@ -69,6 +69,8 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		}
 		if (parentCategory2 != null){
 			cbCategory2.setSelectedItem(parentCategory2);
+		} else {
+			cbCategory2.setSelectedIndex(-1);
 		}
 	}
 	

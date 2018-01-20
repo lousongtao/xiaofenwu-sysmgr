@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +38,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.shuishou.sysmgr.ConstantValue;
 import com.shuishou.sysmgr.beans.HttpResult;
+import com.shuishou.sysmgr.beans.Indent;
+import com.shuishou.sysmgr.beans.IndentDetail;
 import com.shuishou.sysmgr.beans.LogData;
+import com.shuishou.sysmgr.beans.PayWay;
 import com.shuishou.sysmgr.beans.ShiftWork;
 import com.shuishou.sysmgr.http.HttpUtil;
+import com.shuishou.sysmgr.printertool.PrintJob;
+import com.shuishou.sysmgr.printertool.PrintQueue;
 import com.shuishou.sysmgr.ui.MainFrame;
 import com.shuishou.sysmgr.ui.components.JDatePicker;
 
@@ -134,25 +140,110 @@ public class ShiftworkQueryPanel extends JPanel implements ActionListener{
 	private void doPrint(){
 		if (table.getSelectedRow() < 0)
 				return;
-		String url = "management/printshiftwork";
+		String url = "indent/queryindentforshiftwork";
 		ShiftWork sw = model.getObjectAt(table.getSelectedRow());
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", MainFrame.getLoginUser().getId() + "");
-		params.put("shiftWorkId", sw.getId() + "");
+		params.put("shiftworkId", sw.getId() + "");
 		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params);
 		if (response == null){
-			logger.error("get null from server for query shiftwork. URL = " + url + ", param = "+ params);
-			JOptionPane.showMessageDialog(this, "get null from server for query shiftwork. URL = " + url);
+			logger.error("get null from server for query indent by shiftwork. URL = " + url + ", param = "+ params);
+			JOptionPane.showMessageDialog(this, "get null from server for query indent by shiftwork. URL = " + url);
 			return;
 		}
 		Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd HH:mm:ss").create();
-		HttpResult<ArrayList<ShiftWork>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<ShiftWork>>>(){}.getType());
+		HttpResult<ArrayList<Indent>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<Indent>>>(){}.getType());
 		if (!result.success){
-			logger.error("return false while query shiftwork. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while query shiftwork. URL = " + url + ", response = "+response);
+			logger.error("return false while query indent by shiftwork. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, "return false while query indent by shiftwork. URL = " + url + ", response = "+response);
 			return;
 		}
-		JOptionPane.showMessageDialog(mainFrame, "Print command is already sent to printer");
+		ArrayList<Indent> indents = result.data;
+		ArrayList<PayWay> otherPayWays = mainFrame.loadPayWayList();
+		
+		Date endTime = sw.getEndTime() == null ? new Date() : sw.getEndTime();
+		long millsecs = endTime.getTime() - sw.getStartTime().getTime();
+		int hours = (int)(millsecs / (60*60*1000));
+		int minutes = (int)((millsecs - hours * 60 * 60 * 1000)/(60*1000));
+		int seconds = (int)((millsecs - hours * 60 * 60 * 1000 - minutes * 60 * 1000)/1000);
+		String workPeriod = (hours > 0 ? hours+"h " : "") + minutes + "m " + seconds + "s";
+		
+		int indentAmount = 0;
+		int goodsAmount = 0;
+		double cashMoney = 0;
+		double bankcardMoney = 0;
+		double memberMoney = 0;
+		double totalPrice = 0;
+		double paidPrice = 0;
+		HashMap<String, Double> mapOtherPay = new HashMap<>();//other pay way money
+		if (otherPayWays != null && !otherPayWays.isEmpty()){
+			for(PayWay pw : otherPayWays){
+				mapOtherPay.put(pw.getName(), new Double(0.0));
+			}
+		}
+		
+		Map<String, Map<String, String>> mapGoodsAmount = new HashMap<String, Map<String, String>>();
+		if (indents != null){
+			for(Indent indent : indents){
+				if (indent.getIndentType() != ConstantValue.INDENT_TYPE_ORDER)
+					continue;
+				indentAmount++;
+				totalPrice += indent.getTotalPrice();
+				paidPrice += indent.getPaidPrice();
+				if (ConstantValue.INDENT_PAYWAY_CASH.equals(indent.getPayWay())){
+					cashMoney += indent.getPaidPrice();
+				} else if (ConstantValue.INDENT_PAYWAY_BANKCARD.equals(indent.getPayWay())){
+					bankcardMoney += indent.getPaidPrice();
+				} else if (ConstantValue.INDENT_PAYWAY_MEMBER.equals(indent.getPayWay())){
+					memberMoney += indent.getPaidPrice();
+				} else {
+					//do double check for other payway, maybe there are some payway not existing in the list, which will make get(payway) == null
+					if (mapOtherPay.get(indent.getPayWay()) == null){
+						mapOtherPay.put(indent.getPayWay(), new Double(0.0));
+					}
+					mapOtherPay.put(indent.getPayWay(), mapOtherPay.get(indent.getPayWay()) + indent.getPaidPrice());
+				}
+				List<IndentDetail> details = indent.getItems();
+				for(IndentDetail d : details){
+					goodsAmount += d.getAmount();
+					Map<String, String> mg = mapGoodsAmount.get(d.getGoodsName());
+					if (mg == null){
+						mg = new HashMap<String, String>();
+						mg.put("name", d.getGoodsName());
+						mg.put("price", d.getGoodsPrice()+"");
+						mg.put("amount", d.getAmount()+"");
+						mg.put("subTotal", String.format(ConstantValue.FORMAT_DOUBLE, d.getSoldPrice() * d.getAmount()));
+						mapGoodsAmount.put(d.getGoodsName(), mg);
+					} else {
+						mg.put("amount", Integer.parseInt(mg.get("amount")) + d.getAmount()+"");
+						mg.put("subTotal", String.format(ConstantValue.FORMAT_DOUBLE, d.getSoldPrice() * d.getAmount() + Double.parseDouble(mg.get("subTotal"))));
+					}
+				}
+			}
+		}
+		Map<String,String> keys = new HashMap<String, String>();
+		keys.put("Cashier", sw.getUserName());
+		keys.put("startTime", ConstantValue.DFYMDHMS.format(sw.getStartTime()));
+		keys.put("endTime", ConstantValue.DFYMDHMS.format(endTime));
+		keys.put("workHours", workPeriod);
+		keys.put("indentAmount", indentAmount+"");
+		keys.put("goodsAmount", goodsAmount + "");
+		keys.put("cashMoney", String.format(ConstantValue.FORMAT_DOUBLE,cashMoney));
+		keys.put("bankcardMoney", String.format(ConstantValue.FORMAT_DOUBLE,bankcardMoney));
+		keys.put("memberMoney", String.format(ConstantValue.FORMAT_DOUBLE,memberMoney));
+		keys.put("totalPrice", String.format(ConstantValue.FORMAT_DOUBLE,totalPrice));
+		keys.put("paidPrice", String.format(ConstantValue.FORMAT_DOUBLE,paidPrice));
+		keys.put("gst", String.format(ConstantValue.FORMAT_DOUBLE,(double)(totalPrice/11)));
+		keys.put("printTime", ConstantValue.DFYMDHMS.format(new Date()));
+		for(String key : mapOtherPay.keySet()){
+			keys.put(key, String.format(ConstantValue.FORMAT_DOUBLE,mapOtherPay.get(key)));
+		}
+		List<Map<String, String>> goods = new ArrayList<Map<String, String>>(mapGoodsAmount.values());
+		Map<String, Object> paramsmap = new HashMap<String, Object>();
+		paramsmap.put("keys", keys);
+		paramsmap.put("goods", goods);
+		PrintJob job = new PrintJob(ConstantValue.TICKET_TEMPLATE_SHIFTWORK, paramsmap, mainFrame.printerName);
+		PrintQueue.add(job);
 	}
 	
 	@Override

@@ -88,8 +88,9 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		tableIndent.getColumnModel().getColumn(1).setPreferredWidth(80);
 		tableIndent.getColumnModel().getColumn(2).setPreferredWidth(80);
 		tableIndent.getColumnModel().getColumn(3).setPreferredWidth(120);
-		tableIndent.getColumnModel().getColumn(4).setPreferredWidth(200);
+		tableIndent.getColumnModel().getColumn(4).setPreferredWidth(120);
 		tableIndent.getColumnModel().getColumn(5).setPreferredWidth(120);
+		tableIndent.setAutoCreateRowSorter(true);
 		JScrollPane jspTableIndent = new JScrollPane(tableIndent, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		tableIndent.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
@@ -178,20 +179,20 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		Map<String,String> keyMap = new HashMap<String, String>();
 		if (indent.getMemberCard() != null && indent.getMemberCard().length() > 0){
 			//reload member data from server
-			Member member = HttpUtil.doLoadMember(mainFrame, mainFrame.getLoginUser(), indent.getMemberCard());
+			Member member = HttpUtil.loadMember(mainFrame, mainFrame.getLoginUser(), indent.getMemberCard());
 			keyMap.put("member", member.getMemberCard() + ", points: " + String.format(ConstantValue.FORMAT_DOUBLE, member.getScore()) 
 				+ ", discount: " + (member.getDiscountRate() * 100) + "%");
 		}else {
 			keyMap.put("member", "");
 		}
-		keyMap.put("cashier", mainFrame.getLoginUser().getName());
+		keyMap.put("cashier", indent.getOperator());
 		keyMap.put("dateTime", ConstantValue.DFYMDHMS.format(indent.getCreateTime()));
 		keyMap.put("totalPrice", String.format(ConstantValue.FORMAT_DOUBLE, indent.getPaidPrice()));
 		keyMap.put("gst", String.format(ConstantValue.FORMAT_DOUBLE, indent.getPaidPrice()/11));
 		keyMap.put("payWay", indent.getPayWay());
 		keyMap.put("orderNo", indent.getIndentCode());
-			keyMap.put("getcash", "");
-			keyMap.put("change", "");
+		keyMap.put("getcash", "");
+		keyMap.put("change", "");
 		double originPrice = 0;
 		List<Map<String, String>> goods = new ArrayList<>();
 		for (int i = 0; i< indent.getItems().size(); i++) {
@@ -233,7 +234,7 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 	
 	class IndentModel extends AbstractTableModel{
 
-		private String[] header = new String[]{"Member Card", "Price", "Paid Price", "Pay Way", "Time", "Order Code", "Type"};
+		private String[] header = new String[]{"Time", "Member Card", "Price", "Paid Price", "Pay Way", "Order Code", "Type"};
 		
 		public IndentModel(){
 
@@ -253,16 +254,17 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			Indent indent = listIndent.get(rowIndex);
 			switch(columnIndex){
-			case 0:
-				return indent.getMemberCard();
-			case 1: 
-				return indent.getTotalPrice();
-			case 2:
-				return indent.getPaidPrice();
-			case 3:
-				return indent.getPayWay();
-			case 4: 
+			case 0: 
 				return ConstantValue.DFYMDHMS.format(indent.getCreateTime());
+			case 1:
+				return indent.getMemberCard();
+			case 2: 
+				return indent.getTotalPrice();
+			case 3:
+				return indent.getPaidPrice();
+			case 4:
+				return indent.getPayWay();
+			
 			case 5:
 				return String.valueOf(indent.getIndentCode());
 			case 6:
@@ -274,6 +276,8 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 					return "PRE-ORDER-UNPAID";
 				else if (indent.getIndentType() == ConstantValue.INDENT_TYPE_REFUND)
 					return "REFUND";
+				else if (indent.getIndentType() == ConstantValue.INDENT_TYPE_PREBUY_FINISHED)
+					return "PRE-ORDER-FINISHED";
 			}
 			return "";
 		}

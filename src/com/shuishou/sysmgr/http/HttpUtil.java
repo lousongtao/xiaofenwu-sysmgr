@@ -383,7 +383,7 @@ public class HttpUtil {
 		return result.data;
 	}
 	
-	public static Member doLoadMember(Window parent, UserData user, String memberCard){
+	public static Member loadMember(Window parent, UserData user, String memberCard){
 		String url = "member/querymember";
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", user.getId() + "");

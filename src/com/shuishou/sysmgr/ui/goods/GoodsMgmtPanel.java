@@ -59,6 +59,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 	private JTextField tfSearchName = new JTextField(); 
 	private JButton btnLookfor = new JButton("Find");
 	private JButton btnPackageBind = new JButton("Package Bind");
+	private JButton btnAddGoods = new JButton("Add Goods");
 	
 	private GoodsPanel pGoods;
 	
@@ -126,13 +127,14 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		pTab.add(tabPane, BorderLayout.CENTER);
 		pTab.add(lbStatistics, BorderLayout.SOUTH);
 		
-		JPanel pPackageBind = new JPanel();
-		pPackageBind.add(btnPackageBind);
+		JPanel pBottomFunction = new JPanel();
+		pBottomFunction.add(btnPackageBind);
+		pBottomFunction.add(btnAddGoods);
 		
 		JPanel pLeft = new JPanel(new BorderLayout());
 		pLeft.add(jspTree, BorderLayout.CENTER);
 		pLeft.add(pSearch, BorderLayout.NORTH);
-		pLeft.add(pPackageBind, BorderLayout.SOUTH);
+		pLeft.add(pBottomFunction, BorderLayout.SOUTH);
 		
 		this.setLayout(new BorderLayout());
 		add(pLeft, BorderLayout.WEST);
@@ -168,6 +170,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		menuitemQuerySoldRecord.addActionListener(this);
 		btnLookfor.addActionListener(this);
 		btnPackageBind.addActionListener(this);
+		btnAddGoods.addActionListener(this);
 		
 		goodsTree.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e) {
@@ -329,6 +332,10 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 			dlg.setVisible(true);
 		} else if (e.getSource() == btnPackageBind){
 			PackageBindMgmtDialog dlg = new PackageBindMgmtDialog(mainFrame);
+			dlg.setVisible(true);
+		} else if (e.getSource() == btnAddGoods){
+			GoodsPanel p = new GoodsPanel(this, null);
+			CommonDialog dlg = new CommonDialog(mainFrame, p, Messages.getString("GoodsMgmtPanel.AddGoods"), 300, 500);
 			dlg.setVisible(true);
 		}
 	}
