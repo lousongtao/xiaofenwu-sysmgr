@@ -33,8 +33,9 @@ public class PayWayMgmtPanel extends JPanel implements ActionListener{
 	private MainFrame mainFrame;
 	private JTable tablePayWay = new JTable();
 	private PayWayTableModel modelPayWay;
-	private JButton btnAdd = new JButton(Messages.getString("PayWayMgmtPanel.Add"));
-	private JButton btnDelete = new JButton(Messages.getString("PayWayMgmtPanel.Delete"));
+	private JButton btnAdd = new JButton(Messages.getString("Add"));
+	private JButton btnModify = new JButton(Messages.getString("Modify"));
+	private JButton btnDelete = new JButton(Messages.getString("Delete"));
 	private ArrayList<PayWay> payWayList;
 	public PayWayMgmtPanel(MainFrame mainFrame, ArrayList<PayWay> payWayList){
 		this.mainFrame = mainFrame;
@@ -43,7 +44,7 @@ public class PayWayMgmtPanel extends JPanel implements ActionListener{
 	}
 	
 	private void initUI(){
-		JLabel lbInfo = new JLabel(Messages.getString("PayWayMgmtPanel.warninginfo")+"<html>skadfj<br>dsfads</html>");
+		JLabel lbInfo = new JLabel(Messages.getString("PayWayMgmtPanel.warninginfo"));
 		lbInfo.setBorder(BorderFactory.createTitledBorder("Information"));
 		modelPayWay = new PayWayTableModel();
 		tablePayWay.setModel(modelPayWay);
@@ -58,9 +59,11 @@ public class PayWayMgmtPanel extends JPanel implements ActionListener{
 		
 		JPanel pButtons = new JPanel();
 		pButtons.add(btnAdd);
+		pButtons.add(btnModify);
 		pButtons.add(btnDelete);
 		
 		btnAdd.addActionListener(this);
+		btnModify.addActionListener(this);
 		btnDelete.addActionListener(this);
 		this.setLayout(new BorderLayout());
 		add(pContent, BorderLayout.CENTER);
@@ -78,37 +81,47 @@ public class PayWayMgmtPanel extends JPanel implements ActionListener{
 			PayWayDialog dlg = new PayWayDialog(mainFrame, this, "Add Pay Way");
 			dlg.setVisible(true);
 		} else if (e.getSource() == btnDelete){
+			doDelete();
+		} else if (e.getSource() == btnModify){
 			if (tablePayWay.getSelectedRow() < 0)
 				return;
-			if (JOptionPane.showConfirmDialog(this, 
-					"Do you want to delete discount template : " + modelPayWay.getObjectAt(tablePayWay.getSelectedRow()).getName() + " ?",
-					"Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION){
-				return;
-			}
-			Map<String, String> params = new HashMap<>();
-			params.put("userId", MainFrame.getLoginUser().getId() + "");
-			params.put("id", modelPayWay.getObjectAt(tablePayWay.getSelectedRow()).getId()+"");
-			String url = "common/deletepayway";
-			String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params);
-			if (response == null){
-				logger.error("get null from server for remove pay way. URL = " + url + ", param = "+ params);
-				JOptionPane.showMessageDialog(this, "get null from server for remove pay way. URL = " + url);
-				return;
-			}
-			Gson gson = new Gson();
-			HttpResult<String> result = gson.fromJson(response, new TypeToken<HttpResult<String>>(){}.getType());
-			if (!result.success){
-				logger.error("return false while remove pay way. URL = " + url + ", response = "+response);
-				JOptionPane.showMessageDialog(this, "return false while remove pay way. URL = " + url + ", response = "+response);
-				return;
-			}
-			refreshData();
-		} 
+			PayWayDialog dlg = new PayWayDialog(mainFrame, this, "Modify Pay Way");
+			dlg.setObject(modelPayWay.getObjectAt(tablePayWay.getSelectedRow()));
+			dlg.setVisible(true);
+		}
+	}
+	
+	private void doDelete(){
+		if (tablePayWay.getSelectedRow() < 0)
+			return;
+		if (JOptionPane.showConfirmDialog(this, 
+				"Do you want to delete discount template : " + modelPayWay.getObjectAt(tablePayWay.getSelectedRow()).getName() + " ?",
+				"Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION){
+			return;
+		}
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", MainFrame.getLoginUser().getId() + "");
+		params.put("id", modelPayWay.getObjectAt(tablePayWay.getSelectedRow()).getId()+"");
+		String url = "common/deletepayway";
+		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params);
+		if (response == null){
+			logger.error("get null from server for remove pay way. URL = " + url + ", param = "+ params);
+			JOptionPane.showMessageDialog(this, "get null from server for remove pay way. URL = " + url);
+			return;
+		}
+		Gson gson = new Gson();
+		HttpResult<String> result = gson.fromJson(response, new TypeToken<HttpResult<String>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while remove pay way. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, "return false while remove pay way. URL = " + url + ", response = "+response);
+			return;
+		}
+		refreshData();
 	}
 	
 	class PayWayTableModel extends AbstractTableModel{
 
-		private String[] header = new String[]{"ID","Name"};
+		private String[] header = new String[]{"ID","Name", "Rate", "Sequence"};
 		
 		public PayWayTableModel(){
 
@@ -132,6 +145,10 @@ public class PayWayMgmtPanel extends JPanel implements ActionListener{
 				return payway.getId();
 			case 1: 
 				return payway.getName();
+			case 2 :
+				return payway.getRate();
+			case 3:
+				return payway.getSequence();
 			}
 			return "";
 		}

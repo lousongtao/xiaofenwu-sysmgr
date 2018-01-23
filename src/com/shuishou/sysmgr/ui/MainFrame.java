@@ -299,6 +299,12 @@ public class MainFrame extends JFrame implements ActionListener{
 	
 	public ArrayList<PayWay> loadPayWayList(){
 		ArrayList<PayWay> payWayList = HttpUtil.loadPayWay(this, SERVER_URL + "common/getpayways");
+		Collections.sort(payWayList, new Comparator<PayWay>(){
+
+			@Override
+			public int compare(PayWay o1, PayWay o2) {
+				return o1.getSequence() - o2.getSequence();
+			}});
 		return payWayList;
 	}
 	

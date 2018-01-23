@@ -70,7 +70,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		if (parentCategory2 != null){
 			cbCategory2.setSelectedItem(parentCategory2);
 		} else {
-			cbCategory2.setSelectedIndex(-1);
+			cbCategory2.setSelectedIndex(0);
 		}
 	}
 	
@@ -144,7 +144,10 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		params.put("userId", String.valueOf(MainFrame.getLoginUser().getId()));
 		params.put("name", tfName.getText());
 //		params.put("sequence", tfDisplaySeq.getText());
-		params.put("barcode", tfBarcode.getText());
+		if (tfBarcode.getText() == null || tfBarcode.getText().length() > 0)
+			params.put("barcode", tfBarcode.getText());
+		else 
+			params.put("barcode", "");
 		params.put("buyPrice", tfBuyPrice.getText());
 		params.put("sellPrice", tfSellPrice.getText());
 		params.put("tradePrice", tfTradePrice.getText());
@@ -212,10 +215,10 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 			JOptionPane.showMessageDialog(this, "Please input Left Amount");
 			return false;
 		}
-		if (tfBarcode.getText() == null || tfBarcode.getText().length() == 0){
-			JOptionPane.showMessageDialog(this, "Please input Barcode");
-			return false;
-		}
+//		if (tfBarcode.getText() == null || tfBarcode.getText().length() == 0){
+//			JOptionPane.showMessageDialog(this, "Please input Barcode");
+//			return false;
+//		}
 		if (cbCategory2.getSelectedIndex() == -1){
 			JOptionPane.showMessageDialog(this, "Please input Category2");
 			return false;
