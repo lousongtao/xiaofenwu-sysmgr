@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JComboBox;
@@ -132,7 +134,22 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		row++;
 		add(new JPanel(), new GridBagConstraints(0, row, 1, 1,0,1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(10,0,0,0), 0, 0));
 		
-		
+		tfTradePrice.addFocusListener(new FocusAdapter(){
+			public void focusGained(FocusEvent e) {
+				if (tfTradePrice.getText() == null || tfTradePrice.getText().length() == 0){
+					tfTradePrice.setText(tfBuyPrice.getText());
+					tfTradePrice.select(0, tfTradePrice.getText().length());
+				}
+			}
+		});
+		tfMemberPrice.addFocusListener(new FocusAdapter(){
+			public void focusGained(FocusEvent e) {
+				if (tfMemberPrice.getText() == null || tfMemberPrice.getText().length() == 0){
+					tfMemberPrice.setText(tfSellPrice.getText());
+					tfMemberPrice.select(0, tfMemberPrice.getText().length());
+				}
+			}
+		});
 	}
 
 	@Override

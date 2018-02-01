@@ -61,7 +61,7 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 	private IndentModel modelIndent = new IndentModel();
 	private JTable tableIndentDetail = new JTable();
 	private IndentDetailModel modelIndentDetail = new IndentDetailModel();
-	
+	private JPanel conditionPanel;
 	
 	private ArrayList<Indent> listIndent = new ArrayList<>();
 	
@@ -95,6 +95,7 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		tableIndent.getColumnModel().getColumn(3).setPreferredWidth(120);
 		tableIndent.getColumnModel().getColumn(4).setPreferredWidth(120);
 		tableIndent.getColumnModel().getColumn(5).setPreferredWidth(120);
+		tableIndent.getColumnModel().getColumn(6).setPreferredWidth(120);
 		tableIndent.setAutoCreateRowSorter(true);
 		JScrollPane jspTableIndent = new JScrollPane(tableIndent, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		tableIndent.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -107,22 +108,22 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		JScrollPane jspTableIndentDetail = new JScrollPane(tableIndentDetail, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		tableIndentDetail.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
-		JPanel pCondition = new JPanel(new GridBagLayout());
+		conditionPanel = new JPanel(new GridBagLayout());
 		int col = 0;
-		pCondition.add(lbMemberCard,new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(tfMemberCard,new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(lbOrderCode, new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(tfOrderCode, new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(lbStartDate,	new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(dpStartDate,	new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(lbEndDate,	new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(dpEndDate,	new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(new JLabel(),new GridBagConstraints(col++, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(lbMemberCard,new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(tfMemberCard,new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(lbOrderCode, new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(tfOrderCode, new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(lbStartDate,	new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(dpStartDate,	new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(lbEndDate,	new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(dpEndDate,	new GridBagConstraints(col++, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(new JLabel(),new GridBagConstraints(col++, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
 		col = 0;
-		pCondition.add(lbIndentType, new GridBagConstraints(col++, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(cbIndentType, new GridBagConstraints(col++, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(btnQuery,	  new GridBagConstraints(col++, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		pCondition.add(btnPrintIndent,new GridBagConstraints(col++, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(lbIndentType, new GridBagConstraints(col++, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(cbIndentType, new GridBagConstraints(col++, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(btnQuery,	  new GridBagConstraints(col++, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		conditionPanel.add(btnPrintIndent,new GridBagConstraints(col++, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
 		btnQuery.addActionListener(this);
 		btnPrintIndent.addActionListener(this);
 		
@@ -132,7 +133,7 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		
 		setLayout(new BorderLayout());
 		add(pTable, BorderLayout.CENTER);
-		add(pCondition, BorderLayout.NORTH);
+		add(conditionPanel, BorderLayout.NORTH);
 		
 		tableIndent.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 
@@ -143,6 +144,15 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 			}
 			
 		});
+	}
+	
+	public void showConditionPanel(boolean b){
+		conditionPanel.setVisible(b);
+	}
+	
+	public void setIndentData(ArrayList<Indent> indents){
+		listIndent = indents;
+		tableIndent.updateUI();
 	}
 	
 	private void doQuery(){
@@ -178,7 +188,7 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 			JOptionPane.showMessageDialog(this, "get null from server for query indent. URL = " + url);
 			return;
 		}
-		Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd HH:mm:ss").create();
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
 		HttpResult<ArrayList<Indent>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<Indent>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query indent. URL = " + url + ", response = "+response);
@@ -292,6 +302,8 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 					return "REFUND";
 				else if (indent.getIndentType() == ConstantValue.INDENT_TYPE_PREBUY_FINISHED)
 					return "PRE-ORDER-FINISHED";
+				else if (indent.getIndentType() == ConstantValue.INDENT_TYPE_ORDER_FROMPREBUY)
+					return "ORDER-FROM-PREORDER";
 			}
 			return "";
 		}

@@ -107,7 +107,7 @@ public class MemberPanel extends JPanel implements CommonDialogOperatorIFC{
 			JOptionPane.showMessageDialog(this, "get null from server for add/update member. URL = " + url);
 			return false;
 		}
-		Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd HH:mm:ss").create();
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
 		HttpResult<Member> result = gson.fromJson(response, new TypeToken<HttpResult<Member>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while add/update member. URL = " + url + ", response = "+response);

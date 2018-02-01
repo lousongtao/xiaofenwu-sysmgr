@@ -34,6 +34,7 @@ import com.shuishou.sysmgr.beans.Member;
 import com.shuishou.sysmgr.http.HttpUtil;
 import com.shuishou.sysmgr.ui.CommonDialog;
 import com.shuishou.sysmgr.ui.MainFrame;
+import com.shuishou.sysmgr.ui.components.NumberInputDialog;
 
 public class MemberQueryPanel extends JPanel implements ActionListener{
 	private final Logger logger = Logger.getLogger(MemberQueryPanel.class.getName());
@@ -51,6 +52,7 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 	private JButton btnUpdate = new JButton("Update");
 	private JButton btnUpdateScore = new JButton("Update Score");
 	private JButton btnUpdateBalance = new JButton("Update Balance");
+	private JButton btnRecharge = new JButton("Recharge");
 	
 	private ArrayList<Member> members = new ArrayList<>();
 	
@@ -107,10 +109,12 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 		pButtons.add(btnUpdate);
 		pButtons.add(btnUpdateScore);
 		pButtons.add(btnUpdateBalance);
+		pButtons.add(btnRecharge);
 		btnAdd.addActionListener(this);
 		btnUpdate.addActionListener(this);
 		btnUpdateScore.addActionListener(this);
 		btnUpdateBalance.addActionListener(this);
+		btnRecharge.addActionListener(this);
 		
 		setLayout(new BorderLayout());
 		add(jspTable, BorderLayout.CENTER);
@@ -140,7 +144,7 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 			JOptionPane.showMessageDialog(this, "get null from server for query member. URL = " + url);
 			return;
 		}
-		Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd HH:mm:ss").create();
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMD).create();
 		HttpResult<ArrayList<Member>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<Member>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query member. URL = " + url + ", response = "+response);
@@ -167,11 +171,99 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 	}
 	
 	private void doUpdateScore(){
-	
+		if (table.getSelectedRow() < 0)
+			return;
+		Member m = model.getObjectAt(table.getSelectedRow());
+		NumberInputDialog dlg = new NumberInputDialog(mainFrame, "Update Score", "Member " + m.getName() + " current score is "+m.getScore()+ ", \nPlease input new score.", true);
+		dlg.setVisible(true);
+		if (!dlg.isConfirm){
+			return;
+		}
+		double newscore = dlg.inputDouble;
+		String url = "member/updatememberscore";
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", MainFrame.getLoginUser().getId() + "");
+		params.put("id",String.valueOf(m.getId()));
+		params.put("newScore", String.valueOf(newscore));
+		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params);
+		if (response == null){
+			logger.error("get null from server for update member score. URL = " + url + ", param = "+ params);
+			JOptionPane.showMessageDialog(this, "get null from server for update member score. URL = " + url);
+			return;
+		}
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
+		HttpResult<Member> result = gson.fromJson(response, new TypeToken<HttpResult<Member>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while update member score. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, "return false while update member score. URL = " + url + ", response = "+response);
+			return;
+		}
+		m.setScore(result.data.getScore());
+		table.updateUI();//here is low efficient, buy using model.fireDataChange will occur an exception if existing a rowSorter.
 	}
 	
 	private void doUpdateBalance(){
-		
+		if (table.getSelectedRow() < 0)
+			return;
+		Member m = model.getObjectAt(table.getSelectedRow());
+		NumberInputDialog dlg = new NumberInputDialog(mainFrame, "Update Balance", "Member " + m.getName() + " current balance is "+m.getBalanceMoney()+ ", \nPlease input new balance.", true);
+		dlg.setVisible(true);
+		if (!dlg.isConfirm){
+			return;
+		}
+		double newbalance = dlg.inputDouble;
+		String url = "member/updatememberbalance";
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", MainFrame.getLoginUser().getId() + "");
+		params.put("id",String.valueOf(m.getId()));
+		params.put("newBalance", String.valueOf(newbalance));
+		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params);
+		if (response == null){
+			logger.error("get null from server for update member balance. URL = " + url + ", param = "+ params);
+			JOptionPane.showMessageDialog(this, "get null from server for update member balance. URL = " + url);
+			return;
+		}
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
+		HttpResult<Member> result = gson.fromJson(response, new TypeToken<HttpResult<Member>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while update member balance. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, "return false while update member balance. URL = " + url + ", response = "+response);
+			return;
+		}
+		m.setBalanceMoney(result.data.getBalanceMoney());
+		table.updateUI();//here is low efficient, buy using model.fireDataChange will occur an exception if existing a rowSorter.
+	}
+	
+	private void doRecharge(){
+		if (table.getSelectedRow() < 0)
+			return;
+		Member m = model.getObjectAt(table.getSelectedRow());
+		NumberInputDialog dlg = new NumberInputDialog(mainFrame, "Recharge", "Member " + m.getName() + " current balance is "+m.getBalanceMoney()+ ", \nPlease input recharge amount.", true);
+		dlg.setVisible(true);
+		if (!dlg.isConfirm){
+			return;
+		}
+		double recharge = dlg.inputDouble;
+		String url = "member/memberrecharge";
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", MainFrame.getLoginUser().getId() + "");
+		params.put("id",String.valueOf(m.getId()));
+		params.put("rechargeValue", String.valueOf(recharge));
+		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params);
+		if (response == null){
+			logger.error("get null from server for member recharge. URL = " + url + ", param = "+ params);
+			JOptionPane.showMessageDialog(this, "get null from server for member recharge. URL = " + url);
+			return;
+		}
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
+		HttpResult<Member> result = gson.fromJson(response, new TypeToken<HttpResult<Member>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while member recharge. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, "return false while member recharge. URL = " + url + ", response = "+response);
+			return;
+		}
+		m.setBalanceMoney(result.data.getBalanceMoney());
+		table.updateUI();//here is low efficient, buy using model.fireDataChange will occur an exception if existing a rowSorter.
 	}
 	
 	public void insertRow(Member m){
@@ -201,6 +293,8 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 			doUpdateScore();
 		} else if (e.getSource() == btnUpdateBalance){
 			doUpdateBalance();
+		} else if (e.getSource() == btnRecharge){
+			doRecharge();
 		}
 	}
 	

@@ -137,7 +137,7 @@ public class LogQueryPanel extends JPanel implements ActionListener{
 			JOptionPane.showMessageDialog(this, "get null from server for query log. URL = " + url);
 			return;
 		}
-		Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd HH:mm:ss").create();
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
 		HttpResult<ArrayList<LogData>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<LogData>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query log. URL = " + url + ", response = "+response);

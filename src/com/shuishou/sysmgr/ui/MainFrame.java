@@ -43,6 +43,7 @@ import com.shuishou.sysmgr.ui.member.MemberQueryPanel;
 import com.shuishou.sysmgr.ui.payway.PayWayMgmtPanel;
 import com.shuishou.sysmgr.ui.query.IndentQueryPanel;
 import com.shuishou.sysmgr.ui.query.LogQueryPanel;
+import com.shuishou.sysmgr.ui.query.SaleRecordQueryPanel;
 import com.shuishou.sysmgr.ui.query.ShiftworkQueryPanel;
 import com.shuishou.sysmgr.ui.statistics.StatisticsPanel;
 
@@ -65,6 +66,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private static final String CARDLAYOUT_INDENTQUERY= "indentquery"; 
 	private static final String CARDLAYOUT_SHIFTWORKQUERY= "shiftworkquery"; 
 	private static final String CARDLAYOUT_STATISTICS= "statistics"; 
+	private static final String CARDLAYOUT_SALERECORD = "salerecord";
 	private JBlockedButton btnAccountMgr = new JBlockedButton(Messages.getString("MainFrame.ToolBar.AccountMgr"));
 	private JBlockedButton btnGoodsMgr = new JBlockedButton(Messages.getString("MainFrame.ToolBar.GoodsMgr"));
 	private JBlockedButton btnMemberMgr = new JBlockedButton(Messages.getString("MainFrame.ToolBar.MemberMgr"));
@@ -75,6 +77,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private JBlockedButton btnQueryIndent = new JBlockedButton(Messages.getString("MainFrame.ToolBar.QueryIndent"));
 	private JBlockedButton btnQuerySwiftWork = new JBlockedButton(Messages.getString("MainFrame.ToolBar.QuerySwiftWork"));
 	private JBlockedButton btnStatistic = new JBlockedButton(Messages.getString("MainFrame.ToolBar.QueryStatistic"));
+	private JBlockedButton btnSaleRecord = new JBlockedButton(Messages.getString("MainFrame.ToolBar.SaleRecord"));
 	private JPanel pContent = new JPanel(new CardLayout());
 	
 	private ArrayList<Category1> listCategory1s;
@@ -90,7 +93,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private IndentQueryPanel pQueryIndent;
 	private ShiftworkQueryPanel pQueryShiftwork;
 	private StatisticsPanel pStatistics;
-	
+	private SaleRecordQueryPanel pSaleRecord;
 	private Gson gson = new Gson();
 	
 	private MainFrame(){
@@ -132,6 +135,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		toolbar.add(btnQuerySwiftWork);
 		toolbar.addSeparator();
 		toolbar.add(btnStatistic);
+		toolbar.addSeparator();
+		toolbar.add(btnSaleRecord);
 		btnAccountMgr.addActionListener(this);
 		btnGoodsMgr.addActionListener(this);
 		btnMemberMgr.addActionListener(this);
@@ -142,6 +147,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		btnQueryIndent.addActionListener(this);
 		btnQuerySwiftWork.addActionListener(this);
 		btnStatistic.addActionListener(this);
+		btnSaleRecord.addActionListener(this);
 		
 		Container c = this.getContentPane();
 		c.setLayout(new BorderLayout(0, 10));
@@ -253,6 +259,15 @@ public class MainFrame extends JFrame implements ActionListener{
 				pContent.updateUI();
 			} else {
 				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_STATISTICS);
+			}
+		} else if (e.getSource() == btnSaleRecord){
+			if (pSaleRecord == null ||  1 == 1){
+				pSaleRecord = new SaleRecordQueryPanel(this, loadPayWayList());
+				pContent.add(pSaleRecord, CARDLAYOUT_SALERECORD);
+				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_SALERECORD);
+				pContent.updateUI();
+			} else {
+				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_SALERECORD);
 			}
 		}
 	}

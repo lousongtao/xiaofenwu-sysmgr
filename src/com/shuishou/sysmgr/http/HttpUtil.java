@@ -42,6 +42,7 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.shuishou.sysmgr.ConstantValue;
 import com.shuishou.sysmgr.beans.Category1;
 import com.shuishou.sysmgr.beans.Category2;
 import com.shuishou.sysmgr.beans.DiscountTemplate;
@@ -396,7 +397,7 @@ public class HttpUtil {
 			JOptionPane.showMessageDialog(parent, "get null from server for query member by membercard. URL = " + url);
 			return null;
 		}
-		Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd HH:mm:ss").create();
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
 		HttpResult<ArrayList<Member>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<Member>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query member by membercard. URL = " + url + ", response = "+response);
