@@ -126,7 +126,8 @@ public class SaleRecordQueryPanel extends JPanel implements ActionListener{
 	private void showSaleDetail(){
 		if (table.getSelectedRow() < 0)
 			return;
-		SaleRecord recs = model.getObjectAt(table.getSelectedRow());
+		int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
+		SaleRecord recs = model.getObjectAt(modelRow);
 		if (recs.indents != null && !recs.indents.isEmpty()){
 			JDialog dlg = new JDialog(mainFrame, "Sale Detail", true);
 			dlg.setSize(1000, 600);

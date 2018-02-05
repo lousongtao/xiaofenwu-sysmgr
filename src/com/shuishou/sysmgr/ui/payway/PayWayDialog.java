@@ -34,6 +34,7 @@ public class PayWayDialog extends JDialog implements ActionListener {
 	private PayWayMgmtPanel parent;
 	
 	private JTextField tfName = new JTextField();
+	private JTextField tfSymbol = new JTextField();
 	private NumberTextField tfRate = new NumberTextField(true);
 	private NumberTextField tfSequence = new NumberTextField(false);
 	private JButton btnSave = new JButton("Save");
@@ -51,6 +52,7 @@ public class PayWayDialog extends JDialog implements ActionListener {
 		JLabel lbName = new JLabel("Name");
 		JLabel lbRate = new JLabel("Rate");
 		JLabel lbSequence = new JLabel("Sequence");
+		JLabel lbSymbol = new JLabel("Symbol");
 		Container c = this.getContentPane();
 		c.setLayout(new GridBagLayout());
 		c.add(lbName, 			new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
@@ -59,8 +61,10 @@ public class PayWayDialog extends JDialog implements ActionListener {
 		c.add(tfRate, 			new GridBagConstraints(1, 1, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
 		c.add(lbSequence, 		new GridBagConstraints(0, 2, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
 		c.add(tfSequence, 		new GridBagConstraints(1, 2, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
-		c.add(btnSave, 			new GridBagConstraints(0, 3, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
-		c.add(btnCancel, 		new GridBagConstraints(1, 3, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		c.add(lbSymbol, 		new GridBagConstraints(0, 3, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		c.add(tfSymbol, 		new GridBagConstraints(1, 3, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		c.add(btnSave, 			new GridBagConstraints(0, 4, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
+		c.add(btnCancel, 		new GridBagConstraints(1, 4, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
 		btnSave.addActionListener(this);
 		btnCancel.addActionListener(this);
 		
@@ -74,11 +78,20 @@ public class PayWayDialog extends JDialog implements ActionListener {
 			JOptionPane.showMessageDialog(this, "must input name");
 			return;
 		}
+		if (tfSequence.getText() == null || tfSequence.getText().length() == 0){
+			JOptionPane.showMessageDialog(this, "must input squence");
+			return;
+		}
+		if (tfSymbol.getText() == null || tfSymbol.getText().length() == 0){
+			JOptionPane.showMessageDialog(this, "must input symbol");
+			return;
+		}
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", MainFrame.getLoginUser().getId() + "");
 		params.put("name", tfName.getText());
 		params.put("rate", tfRate.getText());
 		params.put("sequence", tfSequence.getText());
+		params.put("symbol", tfSymbol.getText());
 		String url = "common/addpayway";
 		if (payway != null){
 			url = "common/updatepayway";
@@ -107,6 +120,7 @@ public class PayWayDialog extends JDialog implements ActionListener {
 		tfName.setText(payway.getName());
 		tfRate.setText(payway.getRate()+"");
 		tfSequence.setText(payway.getSequence()+"");
+		tfSymbol.setText(payway.getSymbol());
 	}
 	
 	@Override

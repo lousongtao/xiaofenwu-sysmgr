@@ -112,22 +112,7 @@
 		"line": true,
 		"type": 0
 	},
-	{
-		"text": "掌上澳洲：{$掌上澳洲}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "支付宝：{$支付宝}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
+
 	{
 		"text": "---------------------------------------",
 		"size": 9,
@@ -152,8 +137,8 @@
 		"variable": "price"
 	},
 	{
-		"name": "Amount",
-		"width": 8,
+		"name": "Quantity",
+		"width": 10,
 		"size":9,
 		"bold": false,
 		"variable": "amount"

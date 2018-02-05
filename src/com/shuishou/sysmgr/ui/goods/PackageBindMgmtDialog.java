@@ -96,7 +96,8 @@ public class PackageBindMgmtDialog extends JDialog implements ActionListener{
 			if (table.getSelectedRow() < 0){
 				return;
 			}
-			PackageBind pb = ((TableModel)table.getModel()).getObjectAt(table.getSelectedRow());
+			int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
+			PackageBind pb = ((TableModel)table.getModel()).getObjectAt(modelRow);
 			PackageBindPanel p = new PackageBindPanel(this, parent);
 			p.setObjectValue(pb);
 			CommonDialog dlg = new CommonDialog(this, p, "Modify PackageBind", 500, 300);
@@ -130,7 +131,8 @@ public class PackageBindMgmtDialog extends JDialog implements ActionListener{
 	private void doDelete(){
 		if (table.getSelectedRow() < 0)
 			return;
-		PackageBind pb = ((TableModel)table.getModel()).getObjectAt(table.getSelectedRow());
+		int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
+		PackageBind pb = ((TableModel)table.getModel()).getObjectAt(modelRow);
 		if (JOptionPane.showConfirmDialog(this, "Do you want to delete this package bind between "+ pb.getBigPackage().getName()+"/"+pb.getSmallPackage().getName(), "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION){
 			return;
 		}
@@ -152,11 +154,15 @@ public class PackageBindMgmtDialog extends JDialog implements ActionListener{
 			JOptionPane.showMessageDialog(this, "return false while delete package bind. URL = " + url + ", response = "+response);
 			return;
 		}
-		model.deleteRow(table.getSelectedRow());
+		model.deleteRow(modelRow);
 		model.fireTableDataChanged();
 	}
 	
 	class TableModel extends DefaultTableModel{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private ArrayList<PackageBind> data;
 		private String[] header = new String[]{"Big Package Name", "Big Package Barcode","rate","Small Package Name","Small Package Barcode"};
 		
@@ -210,7 +216,7 @@ public class PackageBindMgmtDialog extends JDialog implements ActionListener{
 		}
 		
 		public boolean isCellEditable(int row, int column) {
-        return false;
-    }
+			return false;
+		}
 	}
 }

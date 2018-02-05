@@ -121,7 +121,7 @@ public class PayWayMgmtPanel extends JPanel implements ActionListener{
 	
 	class PayWayTableModel extends AbstractTableModel{
 
-		private String[] header = new String[]{"ID","Name", "Rate", "Sequence"};
+		private String[] header = new String[]{"ID","Name", "Rate", "Sequence", "Symbol"};
 		
 		public PayWayTableModel(){
 
@@ -149,6 +149,8 @@ public class PayWayMgmtPanel extends JPanel implements ActionListener{
 				return payway.getRate();
 			case 3:
 				return payway.getSequence();
+			case 4:
+				return payway.getSymbol();
 			}
 			return "";
 		}

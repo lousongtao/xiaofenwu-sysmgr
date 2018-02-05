@@ -261,7 +261,7 @@ public class MainFrame extends JFrame implements ActionListener{
 				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_STATISTICS);
 			}
 		} else if (e.getSource() == btnSaleRecord){
-			if (pSaleRecord == null ||  1 == 1){
+			if (pSaleRecord == null){
 				pSaleRecord = new SaleRecordQueryPanel(this, loadPayWayList());
 				pContent.add(pSaleRecord, CARDLAYOUT_SALERECORD);
 				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_SALERECORD);

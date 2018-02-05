@@ -37,6 +37,11 @@ import com.shuishou.sysmgr.ui.MainFrame;
 import com.shuishou.sysmgr.ui.components.NumberInputDialog;
 
 public class MemberQueryPanel extends JPanel implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private final Logger logger = Logger.getLogger(MemberQueryPanel.class.getName());
 
 	private MainFrame mainFrame;
@@ -165,7 +170,8 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 		if (table.getSelectedRow() < 0)
 			return;
 		MemberPanel p = new MemberPanel(this);
-		p.setObjectValue(model.getObjectAt(table.getSelectedRow()));
+		int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
+		p.setObjectValue(model.getObjectAt(modelRow));
 		CommonDialog dlg = new CommonDialog(mainFrame, p, "Update Member", 300, 300);
 		dlg.setVisible(true);
 	}
@@ -173,7 +179,8 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 	private void doUpdateScore(){
 		if (table.getSelectedRow() < 0)
 			return;
-		Member m = model.getObjectAt(table.getSelectedRow());
+		int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
+		Member m = model.getObjectAt(modelRow);
 		NumberInputDialog dlg = new NumberInputDialog(mainFrame, "Update Score", "Member " + m.getName() + " current score is "+m.getScore()+ ", \nPlease input new score.", true);
 		dlg.setVisible(true);
 		if (!dlg.isConfirm){
@@ -205,7 +212,8 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 	private void doUpdateBalance(){
 		if (table.getSelectedRow() < 0)
 			return;
-		Member m = model.getObjectAt(table.getSelectedRow());
+		int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
+		Member m = model.getObjectAt(modelRow);
 		NumberInputDialog dlg = new NumberInputDialog(mainFrame, "Update Balance", "Member " + m.getName() + " current balance is "+m.getBalanceMoney()+ ", \nPlease input new balance.", true);
 		dlg.setVisible(true);
 		if (!dlg.isConfirm){
@@ -237,7 +245,8 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 	private void doRecharge(){
 		if (table.getSelectedRow() < 0)
 			return;
-		Member m = model.getObjectAt(table.getSelectedRow());
+		int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
+		Member m = model.getObjectAt(modelRow);
 		NumberInputDialog dlg = new NumberInputDialog(mainFrame, "Recharge", "Member " + m.getName() + " current balance is "+m.getBalanceMoney()+ ", \nPlease input recharge amount.", true);
 		dlg.setVisible(true);
 		if (!dlg.isConfirm){
@@ -300,6 +309,10 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 	
 	class TableModel extends DefaultTableModel{
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private String[] header = new String[]{"Name", "Member Card", "Telephone", "Discount Rate", "Create Date","Score", "Balance Money","Address", "Postcode",  "Birthday"};
 		
 		public TableModel(){

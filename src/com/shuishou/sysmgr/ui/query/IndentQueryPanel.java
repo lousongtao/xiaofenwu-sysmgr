@@ -139,7 +139,10 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				modelIndentDetail.setData((ArrayList)modelIndent.getObjectAt(tableIndent.getSelectedRow()).getItems());
+				if (tableIndent.getSelectedRow() < 0)
+					return;
+				int modelRow = tableIndent.convertRowIndexToModel(tableIndent.getSelectedRow());
+				modelIndentDetail.setData((ArrayList)modelIndent.getObjectAt(modelRow).getItems());
 				tableIndentDetail.updateUI();
 			}
 			
@@ -252,7 +255,8 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		} else if (e.getSource() == btnPrintIndent){
 			if (tableIndent.getSelectedRow() < 0)
 				return;
-			doPrint(((IndentModel)tableIndent.getModel()).getObjectAt(tableIndent.getSelectedRow()));
+			int modelRow = tableIndent.convertRowIndexToModel(tableIndent.getSelectedRow());
+			doPrint(((IndentModel)tableIndent.getModel()).getObjectAt(modelRow));
 		} 
 	}
 	
