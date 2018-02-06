@@ -17,9 +17,9 @@ private int id;
 	
 	private double totalPrice;
 	
-	private double paidPrice;//实际付款金额
+	private double paidPrice;//瀹為檯浠樻閲戦
 	
-	private String payWay;//付款方式
+	private String payWay;//浠樻鏂瑰紡
 	
 	private String memberCard;
 	
@@ -27,10 +27,19 @@ private int id;
 	
 	private int indentType;
 	
-	private String operator;//操作人
+	private String operator;//鎿嶄綔浜�
+	
+	private double adjustPrice;
 	
 	
-	
+	public double getAdjustPrice() {
+		return adjustPrice;
+	}
+
+	public void setAdjustPrice(double adjustPrice) {
+		this.adjustPrice = adjustPrice;
+	}
+
 	public String getOperator() {
 		return operator;
 	}

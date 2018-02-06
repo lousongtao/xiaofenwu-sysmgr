@@ -207,8 +207,8 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		if (indent.getMemberCard() != null && indent.getMemberCard().length() > 0){
 			//reload member data from server
 			Member member = HttpUtil.loadMember(mainFrame, mainFrame.getLoginUser(), indent.getMemberCard());
-			keyMap.put("member", member.getMemberCard() + ", points: " + String.format(ConstantValue.FORMAT_DOUBLE, member.getScore()) 
-				+ ", discount: " + (member.getDiscountRate() * 100) + "%");
+			keyMap.put("member", member.getMemberCard() + ", "+ member.getName() + String.format(ConstantValue.FORMAT_DOUBLE, member.getScore()) 
+			+ ", " + (member.getDiscountRate() * 100) + "%");
 		}else {
 			keyMap.put("member", "");
 		}

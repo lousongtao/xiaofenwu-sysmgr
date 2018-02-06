@@ -48,6 +48,7 @@ import com.shuishou.sysmgr.beans.HttpResult;
 import com.shuishou.sysmgr.http.HttpUtil;
 import com.shuishou.sysmgr.ui.CommonDialog;
 import com.shuishou.sysmgr.ui.MainFrame;
+import com.shuishou.sysmgr.ui.components.NumberInputDialog;
 
 public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, ActionListener{
 	private final Logger logger = Logger.getLogger(GoodsMgmtPanel.class.getName());
@@ -80,6 +81,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 	private JMenuItem menuitemModifyGoods = new JMenuItem(Messages.getString("GoodsMgmtPanel.Modify"));
 	private JMenuItem menuitemDeleteGoods = new JMenuItem(Messages.getString("GoodsMgmtPanel.Delete"));
 	private JMenuItem menuitemImportGoods = new JMenuItem(Messages.getString("GoodsMgmtPanel.ImportGoods"));
+	private JMenuItem menuitemUpdateAmountGoods = new JMenuItem(Messages.getString("GoodsMgmtPanel.UpdateAmountGoods"));
 	private JMenuItem menuitemQuerySoldRecord = new JMenuItem(Messages.getString("GoodsMgmtPanel.QueryGoodsSoldRecord"));
 	
 	private ArrayList<Category1> category1s ;
@@ -152,6 +154,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		popupmenuC2.add(menuitemDeleteC2);
 		popupmenuGoods.add(menuitemModifyGoods);
 		popupmenuGoods.add(menuitemImportGoods);
+		popupmenuGoods.add(menuitemUpdateAmountGoods);
 		popupmenuGoods.add(menuitemDeleteGoods);
 		popupmenuGoods.add(menuitemQuerySoldRecord);
 		
@@ -168,6 +171,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		menuitemDeleteGoods.addActionListener(this);
 		menuitemImportGoods.addActionListener(this);
 		menuitemQuerySoldRecord.addActionListener(this);
+		menuitemUpdateAmountGoods.addActionListener(this);
 		btnLookfor.addActionListener(this);
 		btnPackageBind.addActionListener(this);
 		btnAddGoods.addActionListener(this);
@@ -196,11 +200,11 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 	}
 	
 	private void buildTree(GoodsTreeNode root) {
-		int goodsType = 0;//商品类型数量
-		int goodsAmount = 0;//商品总库存量
-		double buyFee = 0; //商品购买价格
-		double tradeFee = 0;//商品批发价格
-		double sellFee = 0;//商品总销售价格
+		int goodsType = 0;//鍟嗗搧绫诲瀷鏁伴噺
+		int goodsAmount = 0;//鍟嗗搧鎬诲簱瀛橀噺
+		double buyFee = 0; //鍟嗗搧璐拱浠锋牸
+		double tradeFee = 0;//鍟嗗搧鎵瑰彂浠锋牸
+		double sellFee = 0;//鍟嗗搧鎬婚攢鍞环鏍�
 		if (category1s != null){
 			for (int i = 0; i < category1s.size(); i++) {
 				Category1 c1 = category1s.get(i);
@@ -316,6 +320,10 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 			ImportGoodsPanel p = new ImportGoodsPanel(this, (Goods)node.getUserObject());
 			CommonDialog dlg = new CommonDialog(mainFrame, p, Messages.getString("GoodsMgmtPanel.ImportGoods"), 300, 300);
 			dlg.setVisible(true);
+		} else if (e.getSource() == menuitemUpdateAmountGoods){
+			GoodsTreeNode node = (GoodsTreeNode) goodsTree.getLastSelectedPathComponent();
+			Goods goods = (Goods)node.getUserObject();
+			doChangeGoodsAmount(goods);
 		} else if (e.getSource() == btnLookfor){
 			doLookfor();
 		} else if (e.getSource() == menuitemQuerySoldRecord){
@@ -340,6 +348,32 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		}
 	}
 	
+	private void doChangeGoodsAmount(Goods goods){
+		NumberInputDialog dlg = new NumberInputDialog(mainFrame, "Change Amount", "Please input new amount for goods " +goods.getName(), false);
+		dlg.setVisible(true);
+		if (dlg.isConfirm){
+			Map<String, String> params = new HashMap<>();
+			params.put("userId", MainFrame.getLoginUser().getId()+"");
+			params.put("id", goods.getId()+"");
+			params.put("amount", dlg.inputInteger + "");
+			String url = "goods/changeamount";
+			String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params);
+			if (response == null){
+				logger.error("get null from server for change goods amount. URL = " + url + ", param = "+ params);
+				JOptionPane.showMessageDialog(this, "get null from server for change goods amount. URL = " + url);
+				return;
+			}
+			Gson gson = new Gson();
+			HttpResult<Goods> result = gson.fromJson(response, new TypeToken<HttpResult<Goods>>(){}.getType());
+			if (!result.success){
+				logger.error("return false while change goods amount. URL = " + url + ", response = "+response);
+				JOptionPane.showMessageDialog(this, "return false while change goods amount. URL = " + url + ", response = "+response);
+				return;
+			}
+			goods.setLeftAmount(dlg.inputInteger);
+			this.valueChanged(null);
+		}
+	}
 	/**
 	 * Find node as the search condition;
 	 * If both name and barcode are input, must match both to find the node;
