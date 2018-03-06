@@ -114,4 +114,12 @@ public class ConstantValue {
 	public static final String TICKET_TEMPLATE_REFUND = "/refund_ticket.json";
 	public static final String TICKET_TEMPLATE_PREBUY = "/preorder_ticket.json";
 	public static final String TICKET_TEMPLATE_SHIFTWORK = "/shiftwork_ticket.json";
+	
+	public static final int MEMBERSCORE_CONSUM = 1;//积分类型-消费
+	public static final int MEMBERSCORE_REFUND = 2;//积分类型-退货
+	public static final int MEMBERSCORE_ADJUST = 3;//积分类型-调整
+	public static final int MEMBERDEPOSIT_CONSUM = 1;//消费余额类型-消费
+	public static final int MEMBERDEPOSIT_REFUND = 2;//消费余额类型-退款
+	public static final int MEMBERDEPOSIT_RECHARGE = 3;//消费余额类型-充值
+	public static final int MEMBERDEPOSIT_ADJUST = 4;//消费余额类型-调整
 }

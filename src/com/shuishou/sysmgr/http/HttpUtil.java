@@ -50,6 +50,8 @@ import com.shuishou.sysmgr.beans.Goods;
 import com.shuishou.sysmgr.beans.GoodsSellRecord;
 import com.shuishou.sysmgr.beans.HttpResult;
 import com.shuishou.sysmgr.beans.Member;
+import com.shuishou.sysmgr.beans.MemberBalance;
+import com.shuishou.sysmgr.beans.MemberScore;
 import com.shuishou.sysmgr.beans.PayWay;
 import com.shuishou.sysmgr.beans.Permission;
 import com.shuishou.sysmgr.beans.UserData;
@@ -405,5 +407,47 @@ public class HttpUtil {
 			return null;
 		}
 		return result.data.get(0);
+	}
+	
+	public static ArrayList<MemberBalance> loadMemberBalanceRecord(Window parent, int userId, int memberId){
+		String url = "member/querymemberbalance";
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", String.valueOf(userId));
+		params.put("memberId", String.valueOf(memberId));
+		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params, "UTF-8");
+		if (response == null){
+			logger.error("get null from server for query member balance. URL = " + url + ", param = "+ params);
+			JOptionPane.showMessageDialog(parent, "get null from server for query member balance. URL = " + url);
+			return null;
+		}
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
+		HttpResult<ArrayList<MemberBalance>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberBalance>>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while query member balance. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, "return false while query member balance. URL = " + url + ", response = "+response);
+			return null;
+		}
+		return result.data;
+	}
+	
+	public static ArrayList<MemberScore> loadMemberScoreRecord(Window parent, int userId, int memberId){
+		String url = "member/querymemberscore";
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", String.valueOf(userId));
+		params.put("memberId", String.valueOf(memberId));
+		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params, "UTF-8");
+		if (response == null){
+			logger.error("get null from server for query member score. URL = " + url + ", param = "+ params);
+			JOptionPane.showMessageDialog(parent, "get null from server for query member score. URL = " + url);
+			return null;
+		}
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
+		HttpResult<ArrayList<MemberScore>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberScore>>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while query member score. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, "return false while query member score. URL = " + url + ", response = "+response);
+			return null;
+		}
+		return result.data;
 	}
 }

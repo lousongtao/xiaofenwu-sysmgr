@@ -31,6 +31,8 @@ import com.shuishou.sysmgr.ConstantValue;
 import com.shuishou.sysmgr.Messages;
 import com.shuishou.sysmgr.beans.HttpResult;
 import com.shuishou.sysmgr.beans.Member;
+import com.shuishou.sysmgr.beans.MemberBalance;
+import com.shuishou.sysmgr.beans.MemberScore;
 import com.shuishou.sysmgr.http.HttpUtil;
 import com.shuishou.sysmgr.ui.CommonDialog;
 import com.shuishou.sysmgr.ui.MainFrame;
@@ -56,7 +58,9 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 	private JButton btnAdd = new JButton("Add");
 	private JButton btnUpdate = new JButton("Update");
 	private JButton btnUpdateScore = new JButton("Update Score");
+	private JButton btnScoreHistory = new JButton("Score Log");
 	private JButton btnUpdateBalance = new JButton("Update Balance");
+	private JButton btnBalanceHistory = new JButton("Balance Log");
 	private JButton btnRecharge = new JButton("Recharge");
 	
 	private ArrayList<Member> members = new ArrayList<>();
@@ -113,13 +117,18 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 		pButtons.add(btnAdd);
 		pButtons.add(btnUpdate);
 		pButtons.add(btnUpdateScore);
+		pButtons.add(btnScoreHistory);
 		pButtons.add(btnUpdateBalance);
+		pButtons.add(btnBalanceHistory);
 		pButtons.add(btnRecharge);
+		
 		btnAdd.addActionListener(this);
 		btnUpdate.addActionListener(this);
 		btnUpdateScore.addActionListener(this);
 		btnUpdateBalance.addActionListener(this);
 		btnRecharge.addActionListener(this);
+		btnBalanceHistory.addActionListener(this);
+		btnScoreHistory.addActionListener(this);
 		
 		setLayout(new BorderLayout());
 		add(jspTable, BorderLayout.CENTER);
@@ -304,6 +313,22 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 			doUpdateBalance();
 		} else if (e.getSource() == btnRecharge){
 			doRecharge();
+		} else if (e.getSource() == btnScoreHistory){
+			if (table.getSelectedRow() < 0)
+				return;
+			int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
+			Member m = model.getObjectAt(modelRow);
+			ArrayList<MemberScore> mss = HttpUtil.loadMemberScoreRecord(mainFrame, MainFrame.getLoginUser().getId(), m.getId());
+			MemberScoreRecordDialog dlg = new MemberScoreRecordDialog(mainFrame, "Member Score", mss, 600, 400);
+			dlg.setVisible(true);
+		} else if (e.getSource() == btnBalanceHistory){
+			if (table.getSelectedRow() < 0)
+				return;
+			int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
+			Member m = model.getObjectAt(modelRow);
+			ArrayList<MemberBalance> mss = HttpUtil.loadMemberBalanceRecord(mainFrame, MainFrame.getLoginUser().getId(), m.getId());
+			MemberBalanceRecordDialog dlg = new MemberBalanceRecordDialog(mainFrame, "Member Balance", mss, 600, 400);
+			dlg.setVisible(true);
 		}
 	}
 	
