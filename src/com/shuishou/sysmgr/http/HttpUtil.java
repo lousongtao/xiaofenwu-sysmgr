@@ -409,6 +409,26 @@ public class HttpUtil {
 		return result.data.get(0);
 	}
 	
+	public static ArrayList<Member> loadAllMember(Window parent, UserData user){
+		String url = "member/queryallmember";
+		Map<String, String> params = new HashMap<>();
+		
+		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params, "UTF-8");
+		if (response == null){
+			logger.error("get null from server for query all member. URL = " + url + ", param = "+ params);
+			JOptionPane.showMessageDialog(parent, "get null from server for query all member. URL = " + url);
+			return null;
+		}
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
+		HttpResult<ArrayList<Member>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<Member>>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while query all member. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, "return false while query all member. URL = " + url + ", response = "+response);
+			return null;
+		}
+		return result.data;
+	}
+	
 	public static ArrayList<MemberBalance> loadMemberBalanceRecord(Window parent, int userId, int memberId){
 		String url = "member/querymemberbalance";
 		Map<String, String> params = new HashMap<>();

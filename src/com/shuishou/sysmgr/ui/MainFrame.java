@@ -30,6 +30,7 @@ import com.shuishou.sysmgr.beans.Category1;
 import com.shuishou.sysmgr.beans.Category2;
 import com.shuishou.sysmgr.beans.DiscountTemplate;
 import com.shuishou.sysmgr.beans.Goods;
+import com.shuishou.sysmgr.beans.Member;
 import com.shuishou.sysmgr.beans.PayWay;
 import com.shuishou.sysmgr.beans.Permission;
 import com.shuishou.sysmgr.beans.UserData;
@@ -81,6 +82,8 @@ public class MainFrame extends JFrame implements ActionListener{
 	private JPanel pContent = new JPanel(new CardLayout());
 	
 	private ArrayList<Category1> listCategory1s;
+	private ArrayList<Member> listMember;
+	
 	private static UserData loginUser;
 	private HashMap<String, String> configsMap;
 	
@@ -366,7 +369,17 @@ public class MainFrame extends JFrame implements ActionListener{
 				}
 			}
 		}
-		
+	}
+	
+	public ArrayList<Member> getListMember(){
+		if (listMember == null){
+			loadMember();
+		}
+		return listMember;
+	}
+	
+	public void loadMember(){
+		listMember = HttpUtil.loadAllMember(this, loginUser);
 	}
 	
 	public void loadConfigsMap(){

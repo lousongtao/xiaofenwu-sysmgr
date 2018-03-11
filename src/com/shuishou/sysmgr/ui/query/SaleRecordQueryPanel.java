@@ -184,8 +184,8 @@ public class SaleRecordQueryPanel extends JPanel implements ActionListener{
 		HashMap<String, SaleRecord> mapSaleRec = new HashMap<>();
 		for(int i = 0; i< indents.size() ; i++){
 			Indent indent = indents.get(i);
-			//不统计已经完成的预购单, 因为已经有一个对应的订单生成了
-			if (indent.getIndentType() == ConstantValue.INDENT_TYPE_PREBUY_FINISHED)
+			//不统计从预购单转成的订单, 只统计"未完成的预购单" 和 "已完成的预购单"
+			if (indent.getIndentType() == ConstantValue.INDENT_TYPE_ORDER_FROMPREBUY)
 				continue;
 			SaleRecord sr = mapSaleRec.get(indent.getOperator());
 			if (sr == null){

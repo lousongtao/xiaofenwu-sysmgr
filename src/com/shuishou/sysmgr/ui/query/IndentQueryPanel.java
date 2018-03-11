@@ -64,10 +64,21 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 	private JPanel conditionPanel;
 	
 	private ArrayList<Indent> listIndent = new ArrayList<>();
+	private HashMap<String, Member> mapMember = new HashMap<>();
 	
 	public IndentQueryPanel(MainFrame mainFrame){
 		this.mainFrame = mainFrame;
 		initUI();
+		initData();
+	}
+	
+	private void initData(){
+		ArrayList<Member> members = mainFrame.getListMember();
+		if (members != null){
+			for (Member m: members) {
+				mapMember.put(m.getMemberCard(), m);
+			}
+		}
 	}
 	
 	private void initUI(){
@@ -91,11 +102,12 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		tableIndent.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableIndent.getColumnModel().getColumn(0).setPreferredWidth(120);
 		tableIndent.getColumnModel().getColumn(1).setPreferredWidth(80);
-		tableIndent.getColumnModel().getColumn(2).setPreferredWidth(80);
-		tableIndent.getColumnModel().getColumn(3).setPreferredWidth(120);
-		tableIndent.getColumnModel().getColumn(4).setPreferredWidth(120);
+		tableIndent.getColumnModel().getColumn(2).setPreferredWidth(100);
+		tableIndent.getColumnModel().getColumn(3).setPreferredWidth(80);
+		tableIndent.getColumnModel().getColumn(4).setPreferredWidth(80);
 		tableIndent.getColumnModel().getColumn(5).setPreferredWidth(120);
 		tableIndent.getColumnModel().getColumn(6).setPreferredWidth(120);
+		tableIndent.getColumnModel().getColumn(7).setPreferredWidth(120);
 		tableIndent.setAutoCreateRowSorter(true);
 		JScrollPane jspTableIndent = new JScrollPane(tableIndent, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		tableIndent.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -262,7 +274,7 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 	
 	class IndentModel extends AbstractTableModel{
 
-		private String[] header = new String[]{"Time", "Member Card", "Price", "Paid Price", "Pay Way", "Order Code", "Type"};
+		private String[] header = new String[]{"Time", "Member Card", "Member Name", "Price", "Paid Price", "Pay Way", "Order Code", "Type"};
 		
 		public IndentModel(){
 
@@ -287,15 +299,20 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 			case 1:
 				return indent.getMemberCard();
 			case 2: 
+				if (indent.getMemberCard() == null || indent.getMemberCard().length() == 0) return "";
+				Member m = mapMember.get(indent.getMemberCard());
+				if (m != null)
+					return m.getName();
+			case 3: 
 				return indent.getTotalPrice();
-			case 3:
-				return indent.getPaidPrice();
 			case 4:
+				return indent.getPaidPrice();
+			case 5:
 				return indent.getPayWay();
 			
-			case 5:
-				return String.valueOf(indent.getIndentCode());
 			case 6:
+				return String.valueOf(indent.getIndentCode());
+			case 7:
 				if (indent.getIndentType() == ConstantValue.INDENT_TYPE_ORDER)
 					return "ORDER";
 				else if (indent.getIndentType() == ConstantValue.INDENT_TYPE_PREBUY_PAID)
