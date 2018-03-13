@@ -304,9 +304,9 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 				if (m != null)
 					return m.getName();
 			case 3: 
-				return indent.getTotalPrice();
+				return String.format(ConstantValue.FORMAT_DOUBLE, indent.getTotalPrice());
 			case 4:
-				return indent.getPaidPrice();
+				return String.format(ConstantValue.FORMAT_DOUBLE, indent.getPaidPrice());
 			case 5:
 				return indent.getPayWay();
 			
