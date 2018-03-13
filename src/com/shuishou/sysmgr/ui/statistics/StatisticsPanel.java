@@ -357,11 +357,13 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 			barDataset.setValue(items.get(i).totalPrice, items.get(i).itemName, "");
 		}
 		JFreeChart pieChart = ChartFactory.createPieChart(Messages.getString("StatisticsPanel.Sell"),pieDataset,true, true, false);
+		pieChart.removeLegend();
 		ChartPanel cpPie = new ChartPanel(pieChart);
 		pChart.add(cpPie);
 		
 		
 		JFreeChart barChart = ChartFactory.createBarChart(Messages.getString("StatisticsPanel.Sell"), "goods", "sold", barDataset);
+		barChart.removeLegend();
 		ChartPanel cpBar = new ChartPanel(barChart);
 		pChart.add(cpBar);
 		pChart.updateUI();
@@ -386,10 +388,12 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 			barDataset.setValue(items.get(i).totalPrice, items.get(i).itemName, "");
 		}
 		JFreeChart pieChart = ChartFactory.createPieChart(Messages.getString("StatisticsPanel.Payway"),pieDataset,true, true, false);
+		pieChart.removeLegend();
 		ChartPanel cpPie = new ChartPanel(pieChart);
 		pChart.add(cpPie);
 		
 		JFreeChart barChart = ChartFactory.createBarChart(Messages.getString("StatisticsPanel.Sell"), "goods", "sold", barDataset);
+		barChart.removeLegend();
 		ChartPanel cpBar = new ChartPanel(barChart);
 		pChart.add(cpBar);
 		pChart.updateUI();
