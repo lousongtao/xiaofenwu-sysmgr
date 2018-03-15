@@ -122,4 +122,10 @@ public class ConstantValue {
 	public static final int MEMBERDEPOSIT_REFUND = 2;//消费余额类型-退款
 	public static final int MEMBERDEPOSIT_RECHARGE = 3;//消费余额类型-充值
 	public static final int MEMBERDEPOSIT_ADJUST = 4;//消费余额类型-调整
+	
+	public static final int MEMBERUPGRADE_RELATION_EQUAL = 1;//等于
+	public static final int MEMBERUPGRADE_RELATION_GREATER = 2;//大于
+	public static final int MEMBERUPGRADE_RELATION_GREATEREQUAL = 3;//大于等于
+	public static final int MEMBERUPGRADE_RELATION_LESS = 4;//小于
+	public static final int MEMBERUPGRADE_RELATION_LESSEQUAL = 5;//小于等于
 }
