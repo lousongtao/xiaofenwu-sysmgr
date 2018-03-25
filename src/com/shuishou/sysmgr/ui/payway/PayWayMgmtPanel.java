@@ -95,7 +95,7 @@ public class PayWayMgmtPanel extends JPanel implements ActionListener{
 		if (tablePayWay.getSelectedRow() < 0)
 			return;
 		if (JOptionPane.showConfirmDialog(this, 
-				"Do you want to delete discount template : " + modelPayWay.getObjectAt(tablePayWay.getSelectedRow()).getName() + " ?",
+				"Do you want to delete this payway : " + modelPayWay.getObjectAt(tablePayWay.getSelectedRow()).getName() + " ?",
 				"Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION){
 			return;
 		}

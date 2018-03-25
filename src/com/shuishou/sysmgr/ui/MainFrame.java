@@ -43,6 +43,7 @@ import com.shuishou.sysmgr.ui.account.AccountMgmtPanel;
 import com.shuishou.sysmgr.ui.config.ConfigsDialog;
 import com.shuishou.sysmgr.ui.discounttemplate.DiscountTemplateMgmtPanel;
 import com.shuishou.sysmgr.ui.goods.GoodsMgmtPanel;
+import com.shuishou.sysmgr.ui.goods.PromotionMgmtPanel;
 import com.shuishou.sysmgr.ui.member.MemberQueryPanel;
 import com.shuishou.sysmgr.ui.member.MemberUpgradeMgmtPanel;
 import com.shuishou.sysmgr.ui.payway.PayWayMgmtPanel;
@@ -62,7 +63,8 @@ public class MainFrame extends JFrame implements ActionListener{
 	public static String SERVER_URL;
 	public static String printerName;
 	public static String FONT_PRINTTICKET;
-	private static final String CARDLAYOUT_GOODSMGMT= "goodsmgmt"; 
+	private static final String CARDLAYOUT_GOODSMGMT= "goodsmgmt";
+	private static final String CARDLAYOUT_PROMOTIONMGMT= "promotionmgmt"; 
 	private static final String CARDLAYOUT_MEMBERMGMT= "membermgmt"; 
 	private static final String CARDLAYOUT_MEMBERUPGRADEMGMT= "memberupgrademgmt"; 
 	private static final String CARDLAYOUT_ACCOUNTMGMT= "accountmgmt"; 
@@ -75,6 +77,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private static final String CARDLAYOUT_SALERECORD = "salerecord";
 	private JMenuItem menuitemAccountMgr = new JMenuItem(Messages.getString("MainFrame.Menu.AccountMgr"));
 	private JMenuItem menuitemGoodsMgr = new JMenuItem(Messages.getString("MainFrame.Menu.GoodsMgr"));
+	private JMenuItem menuitemPromotionMgr = new JMenuItem(Messages.getString("MainFrame.Menu.PromotionMgr"));
 	private JMenuItem menuitemMemberMgr = new JMenuItem(Messages.getString("MainFrame.Menu.MemberMgr"));
 	private JMenuItem menuitemMemberUpgrade = new JMenuItem(Messages.getString("MainFrame.Menu.MemberUpgradeMgr"));
 	private JMenuItem menuitemPayWayMgr = new JMenuItem(Messages.getString("MainFrame.Menu.PayWayMgr"));
@@ -96,6 +99,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private MemberQueryPanel pMemberMgmt;
 	private MemberUpgradeMgmtPanel pMemberUpgradeMgmt;
 	private GoodsMgmtPanel pGoodsMgmt;
+	private PromotionMgmtPanel pPromotionMgmt;
 	private AccountMgmtPanel pAccount;
 	private DiscountTemplateMgmtPanel pDiscountTemplate;
 	private PayWayMgmtPanel pPayWay;
@@ -138,6 +142,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		menuConfig.add(menuitemPayWayMgr);
 		menuConfig.add(menuitemDiscountTempMgr);
 		menuGoods.add(menuitemGoodsMgr);
+		menuGoods.add(menuitemPromotionMgr);
 		menuQuery.add(menuitemQueryLog);
 		menuQuery.add(menuitemQueryIndent);
 		menuQuery.add(menuitemQuerySwiftWork);
@@ -150,6 +155,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		menuitemAccountMgr.addActionListener(this);
 		menuitemGoodsMgr.addActionListener(this);
+		menuitemPromotionMgr.addActionListener(this);
 		menuitemMemberMgr.addActionListener(this);
 		menuitemMemberUpgrade.addActionListener(this);
 		menuitemPayWayMgr.addActionListener(this);
@@ -196,6 +202,16 @@ public class MainFrame extends JFrame implements ActionListener{
 				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_GOODSMGMT);
 			}
 			this.setTitle(Messages.getString("MainFrame.FrameTitle") + " - " + menuitemGoodsMgr.getText());
+		} else if (e.getSource() == menuitemPromotionMgr){
+			if (pPromotionMgmt == null){
+				pPromotionMgmt = new PromotionMgmtPanel(this);
+				pContent.add(pPromotionMgmt, CARDLAYOUT_PROMOTIONMGMT);
+				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_PROMOTIONMGMT);
+				pContent.updateUI();
+			} else {
+				((CardLayout)pContent.getLayout()).show(pContent, CARDLAYOUT_PROMOTIONMGMT);
+			}
+			this.setTitle(Messages.getString("MainFrame.FrameTitle") + " - " + menuitemPromotionMgr.getText());
 		} else if (e.getSource() == menuitemMemberMgr){
 			if (pMemberMgmt == null){
 				pMemberMgmt = new MemberQueryPanel(this);

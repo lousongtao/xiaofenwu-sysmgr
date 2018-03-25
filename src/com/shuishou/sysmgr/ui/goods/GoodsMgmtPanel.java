@@ -394,13 +394,16 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 			return;
 		}
 		GoodsTreeNode selectNode = (GoodsTreeNode) goodsTree.getLastSelectedPathComponent();
-		
+		//如果当前选择点是 商品, 把这个商品的父节点作为起始查找点
+		if (selectNode.getUserObject() instanceof Goods){
+			selectNode = (GoodsTreeNode)selectNode.getParent();
+		}
 		GoodsTreeNode root = (GoodsTreeNode)goodsTree.getModel().getRoot();
 		boolean bStartFlag = false;//until find the selectNode in enumeration, then begin look for
 		if (selectNode == null || selectNode == root){
 			bStartFlag = true;
 		}
-		Enumeration<GoodsTreeNode> e = root.depthFirstEnumeration();
+		Enumeration<GoodsTreeNode> e = root.breadthFirstEnumeration();
 		boolean bFound = false;
 		while(e.hasMoreElements()){
 			GoodsTreeNode node = e.nextElement();

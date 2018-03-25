@@ -128,4 +128,13 @@ public class ConstantValue {
 	public static final int MEMBERUPGRADE_RELATION_GREATEREQUAL = 3;//大于等于
 	public static final int MEMBERUPGRADE_RELATION_LESS = 4;//小于
 	public static final int MEMBERUPGRADE_RELATION_LESSEQUAL = 5;//小于等于
+	
+	public static final int PROMOTION_GOODS = 1;
+	public static final int PROMOTION_CATEGORY2 = 2;
+	public static final int PROMOTION_CATEGORY1 = 3;
+	
+	public static final int PROMOTION_REWARD_BUYNREDUCEPRICE = 1; //买n个, 直接折扣x元
+	public static final int PROMOTION_REWARD_BUYNDISCOUNT = 2; //买n个, 给予百分比折扣
+	public static final int PROMOTION_REWARD_BUYNNEXTREDUCEPRICE = 3; //买n个, 下一个直接折扣x元
+	public static final int PROMOTION_REWARD_BUYNNEXTDISCOUNT = 4; //买n个, 下一个给予百分比折扣
 }

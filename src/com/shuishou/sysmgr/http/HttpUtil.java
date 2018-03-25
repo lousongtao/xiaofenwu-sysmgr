@@ -54,6 +54,7 @@ import com.shuishou.sysmgr.beans.MemberBalance;
 import com.shuishou.sysmgr.beans.MemberScore;
 import com.shuishou.sysmgr.beans.PayWay;
 import com.shuishou.sysmgr.beans.Permission;
+import com.shuishou.sysmgr.beans.Promotion;
 import com.shuishou.sysmgr.beans.UserData;
 import com.shuishou.sysmgr.ui.MainFrame;
 
@@ -319,6 +320,22 @@ public class HttpUtil {
 		if (!result.success){
 			logger.error("return false while loading pay way. URL = " + url + ", response = "+response);
 			JOptionPane.showMessageDialog(parent, "return false while loading pay way. URL = " + url + ", response = "+response);
+			return null;
+		}
+		return result.data;
+	}
+	
+	public static ArrayList<Promotion> loadPromotion(JFrame parent, String url){
+		String response = getJSONObjectByGet(url);
+		if (response == null){
+			logger.error("get null from server for loading promotion. URL = " + url);
+			JOptionPane.showMessageDialog(parent, "get null from server for loading promotion. URL = " + url);
+			return null;
+		}
+		HttpResult<ArrayList<Promotion>> result = new Gson().fromJson(response, new TypeToken<HttpResult<ArrayList<Promotion>>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while loading promotion. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, "return false while loading promotion. URL = " + url + ", response = "+response);
 			return null;
 		}
 		return result.data;
