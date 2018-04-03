@@ -108,6 +108,7 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 		tableIndent.getColumnModel().getColumn(5).setPreferredWidth(120);
 		tableIndent.getColumnModel().getColumn(6).setPreferredWidth(120);
 		tableIndent.getColumnModel().getColumn(7).setPreferredWidth(120);
+		tableIndent.getColumnModel().getColumn(8).setPreferredWidth(80);
 		tableIndent.setAutoCreateRowSorter(true);
 		JScrollPane jspTableIndent = new JScrollPane(tableIndent, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		tableIndent.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -274,7 +275,7 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 	
 	class IndentModel extends AbstractTableModel{
 
-		private String[] header = new String[]{"Time", "Member Card", "Member Name", "Price", "Paid Price", "Pay Way", "Order Code", "Type"};
+		private String[] header = new String[]{"Time", "Member Card", "Member Name", "Price", "Paid Price", "Pay Way", "Order Code", "Type", "Discount Template"};
 		
 		public IndentModel(){
 
@@ -325,6 +326,8 @@ public class IndentQueryPanel extends JPanel implements ActionListener{
 					return "PRE-ORDER-FINISHED";
 				else if (indent.getIndentType() == ConstantValue.INDENT_TYPE_ORDER_FROMPREBUY)
 					return "ORDER-FROM-PREORDER";
+			case 8:
+				return indent.getDiscountTemplate() != null ? indent.getDiscountTemplate() : "";
 			}
 			return "";
 		}

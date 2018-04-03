@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.shuishou.sysmgr.ConstantValue;
 import com.shuishou.sysmgr.Messages;
 import com.shuishou.sysmgr.beans.DiscountTemplate;
 import com.shuishou.sysmgr.beans.HttpResult;
@@ -46,6 +47,7 @@ public class DiscountTemplateMgmtPanel extends JPanel implements ActionListener{
 		tableDiscountTemplate.getColumnModel().getColumn(0).setPreferredWidth(20);
 		tableDiscountTemplate.getColumnModel().getColumn(1).setPreferredWidth(20);
 		tableDiscountTemplate.getColumnModel().getColumn(2).setPreferredWidth(50);
+		tableDiscountTemplate.getColumnModel().getColumn(3).setPreferredWidth(50);
 		JScrollPane jspTable = new JScrollPane(tableDiscountTemplate, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		
 		JPanel pButtons = new JPanel();
@@ -100,7 +102,7 @@ public class DiscountTemplateMgmtPanel extends JPanel implements ActionListener{
 	
 	class DiscountTemplateTableModel extends AbstractTableModel{
 
-		private String[] header = new String[]{"ID","Name","Discount Rate"};
+		private String[] header = new String[]{"ID","Name","Type", "Value"};
 		
 		public DiscountTemplateTableModel(){
 
@@ -125,7 +127,13 @@ public class DiscountTemplateMgmtPanel extends JPanel implements ActionListener{
 			case 1: 
 				return discountTemplate.getName();
 			case 2:
-				return discountTemplate.getRate();
+				if (discountTemplate.getType() == ConstantValue.DISCOUNTTYPE_RATE)
+					return "by rate";
+				else if (discountTemplate.getType() == ConstantValue.DISCOUNTTYPE_QUANTITY)
+					return "by value";
+				break;
+			case 3:
+				return discountTemplate.getValue();
 			}
 			return "";
 		}

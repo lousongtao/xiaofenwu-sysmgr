@@ -21,6 +21,8 @@ private int id;
 	
 	private String payWay;//浠樻鏂瑰紡
 	
+	private String discountTemplate;
+	
 	private String memberCard;
 	
 	private String indentCode;
@@ -86,6 +88,14 @@ private int id;
 
 	public void setPayWay(String payWay) {
 		this.payWay = payWay;
+	}
+
+	public String getDiscountTemplate() {
+		return discountTemplate;
+	}
+
+	public void setDiscountTemplate(String discountTemplate) {
+		this.discountTemplate = discountTemplate;
 	}
 
 	public String getMemberCard() {

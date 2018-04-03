@@ -11,7 +11,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -148,6 +150,7 @@ public class SaleRecordQueryPanel extends JPanel implements ActionListener{
 		String url = "indent/queryindent";
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", MainFrame.getLoginUser().getId() + "");
+		params.put("limit", "10000");//set a big value for query dataset limitation
 		if (dpStartDate.getModel() != null && dpStartDate.getModel().getValue() != null){
 			Calendar c = (Calendar)dpStartDate.getModel().getValue();
 			c.set(Calendar.HOUR_OF_DAY, 0);
@@ -235,7 +238,21 @@ public class SaleRecordQueryPanel extends JPanel implements ActionListener{
 			dpEndDate.getModel().setDay(c.get(Calendar.DAY_OF_MONTH));
 			dpEndDate.getModel().setSelected(true);
 		} else if (e.getSource() == btnThisWeek){
-			Calendar c = Calendar.getInstance();
+			Calendar c = Calendar.getInstance(Locale.CHINA);
+			c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+			c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH));
+			dpStartDate.getModel().setYear(c.get(Calendar.YEAR));
+			dpStartDate.getModel().setMonth(c.get(Calendar.MONTH));
+			dpStartDate.getModel().setDay(c.get(Calendar.DAY_OF_MONTH));
+			dpStartDate.getModel().setSelected(true);
+			c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+			c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH));
+			dpEndDate.getModel().setYear(c.get(Calendar.YEAR));
+			dpEndDate.getModel().setMonth(c.get(Calendar.MONTH));
+			dpEndDate.getModel().setDay(c.get(Calendar.DAY_OF_MONTH));
+			dpEndDate.getModel().setSelected(true);
+		} else if (e.getSource() == btnLastWeek){
+			Calendar c = Calendar.getInstance(Locale.CHINA);
 			c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 			c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) - 7);
 			dpStartDate.getModel().setYear(c.get(Calendar.YEAR));
@@ -243,21 +260,7 @@ public class SaleRecordQueryPanel extends JPanel implements ActionListener{
 			dpStartDate.getModel().setDay(c.get(Calendar.DAY_OF_MONTH));
 			dpStartDate.getModel().setSelected(true);
 			c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-			c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) + 7);
-			dpEndDate.getModel().setYear(c.get(Calendar.YEAR));
-			dpEndDate.getModel().setMonth(c.get(Calendar.MONTH));
-			dpEndDate.getModel().setDay(c.get(Calendar.DAY_OF_MONTH));
-			dpEndDate.getModel().setSelected(true);
-		} else if (e.getSource() == btnLastWeek){
-			Calendar c = Calendar.getInstance();
-			c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-			c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) - 14);
-			dpStartDate.getModel().setYear(c.get(Calendar.YEAR));
-			dpStartDate.getModel().setMonth(c.get(Calendar.MONTH));
-			dpStartDate.getModel().setDay(c.get(Calendar.DAY_OF_MONTH));
-			dpStartDate.getModel().setSelected(true);
-			c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-			c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) + 7);
+			c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH));
 			dpEndDate.getModel().setYear(c.get(Calendar.YEAR));
 			dpEndDate.getModel().setMonth(c.get(Calendar.MONTH));
 			dpEndDate.getModel().setDay(c.get(Calendar.DAY_OF_MONTH));
