@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -197,6 +199,20 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 				}
 			}
 		});
+		tfSearchBarcode.addKeyListener(new KeyAdapter(){
+			public void keyTyped(KeyEvent e) {
+        		if (e.getKeyChar() == KeyEvent.VK_ENTER){
+        			doLookfor();
+        		} 
+        	}
+		});
+		tfSearchName.addKeyListener(new KeyAdapter(){
+			public void keyTyped(KeyEvent e) {
+        		if (e.getKeyChar() == KeyEvent.VK_ENTER){
+        			doLookfor();
+        		} 
+        	}
+		});
 	}
 	
 	private void buildTree(GoodsTreeNode root) {
@@ -381,7 +397,9 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 	 * for name, just compare part of the name, ignore its capital(no capital sensitive).
 	 * if the current selection is 0 or none, look for from the root node;
 	 * if the current selection is not 0, then loop the nodes firstly, until find the selection node, then start to compare;
-	 * the enumeration using a deep loop algorithm.
+	 * the enumeration using a breadth first loop algorithm.
+	 * 
+	 * if the result is more, pop up a dialog to show them.
 	 */
 	private void doLookfor(){
 		String name = null;
@@ -393,58 +411,70 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		if (name == null && barcode == null){
 			return;
 		}
-		GoodsTreeNode selectNode = (GoodsTreeNode) goodsTree.getLastSelectedPathComponent();
-		//如果当前选择点是 商品, 把这个商品的父节点作为起始查找点
-		if (selectNode.getUserObject() instanceof Goods){
-			selectNode = (GoodsTreeNode)selectNode.getParent();
+		//first loop all goods to find if there are more goods match the input condition
+		ArrayList<Goods> matchGoods = new ArrayList<>();
+		for (int i = 0; i < category1s.size(); i++) {
+			Category1 c1 = category1s.get(i);
+			if (c1.getCategory2s() != null){
+				for (int j = 0; j < c1.getCategory2s().size(); j++) {
+					Category2 c2 = c1.getCategory2s().get(j);
+					if (c2.getGoods() != null){
+						for (int k = 0; k < c2.getGoods().size(); k++) {
+							Goods g = c2.getGoods().get(k);
+							boolean suitBarcode = false;
+							boolean suitName = false;
+							if (name == null){
+								suitName = true;
+							} else {
+								if (g.getName().toLowerCase().indexOf(name.toLowerCase()) >= 0){
+									suitName = true;
+								}
+							}
+							if (barcode == null){
+								suitBarcode = true;
+							} else {
+								if (g.getBarcode().equals(barcode)){
+									suitBarcode = true;
+								}
+							}
+							if (suitName && suitBarcode){
+								matchGoods.add(g);
+							}
+						}
+					}
+				}
+			}
 		}
+		if (matchGoods.isEmpty()){
+			JOptionPane.showMessageDialog(this, "Cannot find goods as the search condition");
+		} else if (matchGoods.size() == 1){
+			locateNode(matchGoods.get(0));
+		} else {
+			//pop up a dialog to list the goods
+			SearchObjectListDialog dlg = new SearchObjectListDialog(mainFrame, matchGoods, 700, 600);
+			dlg.setVisible(true);
+			if (dlg.getChoosedGoods() != null){
+				locateNode(dlg.getChoosedGoods());
+			}
+		}
+	}
+	
+	private void locateNode(Goods g){
 		GoodsTreeNode root = (GoodsTreeNode)goodsTree.getModel().getRoot();
-		boolean bStartFlag = false;//until find the selectNode in enumeration, then begin look for
-		if (selectNode == null || selectNode == root){
-			bStartFlag = true;
-		}
 		Enumeration<GoodsTreeNode> e = root.breadthFirstEnumeration();
-		boolean bFound = false;
 		while(e.hasMoreElements()){
 			GoodsTreeNode node = e.nextElement();
-			if (!bStartFlag){
-				if (node == selectNode){
-					bStartFlag = true;
-				}
-				continue;
-			}
 			if (node.getUserObject() instanceof Goods){
 				Goods goods = (Goods)node.getUserObject();
-				boolean suitBarcode = false;
-				boolean suitName = false;
-				if (name == null){
-					suitName = true;
-				} else {
-					if (goods.getName().toLowerCase().indexOf(name.toLowerCase()) >= 0){
-						suitName = true;
-					}
-				}
-				if (barcode == null){
-					suitBarcode = true;
-				} else {
-					if (goods.getBarcode().equals(barcode)){
-						suitBarcode = true;
-					}
-				}
-				if (suitName && suitBarcode){
+				if (goods.getId() == g.getId()){
 					TreePath path = new TreePath(node.getPath());
 					goodsTree.setSelectionPath(path);
 					goodsTree.scrollPathToVisible(path);
-					bFound = true;
 					break;
 				}
 			}
 		}
-		if (!bFound){
-			JOptionPane.showMessageDialog(this, "Cannot find goods as the search condition");
-		}
 	}
-	
 	
 	/**
 	 * if root node is null, then insert position = 0

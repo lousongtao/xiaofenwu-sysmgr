@@ -26,6 +26,7 @@ import com.shuishou.sysmgr.ui.CommonDialogOperatorIFC;
 import com.shuishou.sysmgr.ui.MainFrame;
 import com.shuishou.sysmgr.ui.components.JDatePicker;
 import com.shuishou.sysmgr.ui.components.NumberTextField;
+import com.shuishou.sysmgr.ui.components.WaitDialog;
 
 public class MemberPanel extends JPanel implements CommonDialogOperatorIFC{
 
@@ -77,7 +78,7 @@ public class MemberPanel extends JPanel implements CommonDialogOperatorIFC{
 		if (!doCheckInput())
 			return false;
 		
-		Map<String, String> params = new HashMap<>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("userId", MainFrame.getLoginUser().getId()+"");
 		params.put("name", tfName.getText());
 		params.put("memberCard", tfMemberCard.getText());
@@ -101,7 +102,15 @@ public class MemberPanel extends JPanel implements CommonDialogOperatorIFC{
 			url = "member/updatemember";
 			params.put("id", member.getId() + "");
 		}
-		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params);
+		
+		final String finalurl = url;
+		WaitDialog wdlg = new WaitDialog(parent.getMainFrame(), "Posting data..."){
+			public Object work() {
+				return HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + finalurl, params);
+			}
+		};
+		String response = (String)wdlg.getReturnResult();
+		
 		if (response == null){
 			logger.error("get null from server for add/update member. URL = " + url + ", param = "+ params);
 			JOptionPane.showMessageDialog(this, "get null from server for add/update member. URL = " + url);

@@ -169,6 +169,11 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 		table.updateUI();
 	}
 	
+	
+	public MainFrame getMainFrame() {
+		return mainFrame;
+	}
+
 	private void doAddMember(){
 		MemberPanel p = new MemberPanel(this);
 		CommonDialog dlg = new CommonDialog(mainFrame, p, "Add Member", 300, 300);
