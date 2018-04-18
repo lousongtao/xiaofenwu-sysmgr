@@ -140,4 +140,7 @@ public class ConstantValue {
 	
 	public static final int DISCOUNTTYPE_RATE= 1;     //折扣类型-按比例折扣
 	public static final int DISCOUNTTYPE_QUANTITY = 2;//折扣类型-直接减数量
+	
+	public static final int MEMBERUPGRADE_STATUS_AVAILABLE = 1;
+	public static final int MEMBERUPGRADE_STATUS_UNAVAILABLE = 2;
 }

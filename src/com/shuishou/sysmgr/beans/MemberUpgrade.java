@@ -17,6 +17,7 @@ public class MemberUpgrade {
 	
 	private double executeValue;
 	
+	private int status;
 	
 	public int getId() {
 		return id;
@@ -26,7 +27,13 @@ public class MemberUpgrade {
 		this.id = id;
 	}
 
-	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
 	public String getCompareField() {
 		return compareField;

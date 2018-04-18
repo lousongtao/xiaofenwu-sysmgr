@@ -53,6 +53,7 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 	private JButton btnAdd = new JButton("Add");
 	private JButton btnUpdate = new JButton("Update");
 	private JButton btnDelete = new JButton("Delete");
+	private JButton btnChange = new JButton("Available/Unavailable");
 	
 	private ArrayList<MemberUpgrade> memberUpgrades = new ArrayList<>();
 	
@@ -81,10 +82,12 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 		pButtons.add(btnAdd);
 		pButtons.add(btnUpdate);
 		pButtons.add(btnDelete);
+		pButtons.add(btnChange);
 		
 		btnAdd.addActionListener(this);
 		btnUpdate.addActionListener(this);
 		btnDelete.addActionListener(this);
+		btnChange.addActionListener(this);
 		
 		setLayout(new BorderLayout());
 		add(jspTable, BorderLayout.CENTER);
@@ -132,8 +135,12 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 	private void doDelete(){
 		if (table.getSelectedRow() < 0)
 			return;
+		if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(mainFrame, "Do you want to delete this member upgrade rule?", "Confirm", JOptionPane.YES_NO_OPTION)){
+			return;
+		}
 		int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
 		MemberUpgrade mu = model.getObjectAt(modelRow);
+		
 		String url = "member/deletememberupgrade";
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", MainFrame.getLoginUser().getId()+"");
@@ -152,6 +159,40 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 			return;
 		}
 		memberUpgrades.remove(modelRow);
+		table.updateUI();
+	}
+	
+	private void doChangeStatus(){
+		if (table.getSelectedRow() < 0)
+			return;
+		
+		int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
+		MemberUpgrade mu = model.getObjectAt(modelRow);
+		
+		if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(mainFrame, "Do you want to change this rule to " 
+				+ (mu.getStatus() == ConstantValue.MEMBERUPGRADE_STATUS_AVAILABLE ? "UNAVAILABLE" : "AVAILABLE") + "?", "Confirm", JOptionPane.YES_NO_OPTION)){
+			return;
+		}
+		
+		String url = "member/changestatusmemberupgrade";
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", MainFrame.getLoginUser().getId()+"");
+		params.put("id", mu.getId()+"");
+		params.put("status", String.valueOf(mu.getStatus() == ConstantValue.MEMBERUPGRADE_STATUS_AVAILABLE ? ConstantValue.MEMBERUPGRADE_STATUS_UNAVAILABLE : ConstantValue.MEMBERUPGRADE_STATUS_AVAILABLE));
+		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params);
+		if (response == null){
+			logger.error("get null from server for change member upgrade status. URL = " + url + ", param = "+ params);
+			JOptionPane.showMessageDialog(this, "get null from server for change member upgrade status. URL = " + url);
+			return;
+		}
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMD).create();
+		HttpResult<MemberUpgrade> result = gson.fromJson(response, new TypeToken<HttpResult<MemberUpgrade>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while change member upgrade status. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, "return false while change member upgrade status. URL = " + url + ", response = "+response);
+			return;
+		}
+		memberUpgrades.set(modelRow, result.data);
 		table.updateUI();
 	}
 	
@@ -178,6 +219,8 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 			doUpdate();
 		} else if (e.getSource() == btnDelete){
 			doDelete();
+		} else if (e.getSource() == btnChange){
+			doChangeStatus();
 		}
 	}
 	
@@ -187,7 +230,7 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		private String[] header = new String[]{"Compare Field", "Start Relation", "Start Value", "End Relation", "End Value","Upgrade Field", "Upgrade Value"};
+		private String[] header = new String[]{"Compare Field", "Start Relation", "Start Value", "End Relation", "End Value","Upgrade Field", "Upgrade Value", "Status"};
 		
 		public TableModel(){
 
@@ -231,6 +274,11 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 				return m.getExecuteField();
 			case 6:
 				return m.getExecuteValue();
+			case 7:
+				if (m.getStatus() == ConstantValue.MEMBERUPGRADE_STATUS_AVAILABLE)
+					return "AVAILABLE";
+				else 
+					return "UNAVAILABLE";
 			}
 			return "";
 		}
