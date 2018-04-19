@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
 
+import com.shuishou.sysmgr.ConstantValue;
 import com.shuishou.sysmgr.beans.Goods;
 import com.shuishou.sysmgr.beans.GoodsSellRecord;
 import com.shuishou.sysmgr.ui.MainFrame;
@@ -27,6 +29,7 @@ import com.shuishou.sysmgr.ui.member.MemberQueryPanel;
 public class GoodsSellRecordDialog extends JDialog{
 	private final Logger logger = Logger.getLogger(MemberQueryPanel.class.getName());
 	private JTable table = new JTable();
+	private JLabel lbTotal = new JLabel();
 	private RecordTableModel model = new RecordTableModel();
 	private MainFrame parent;
 	
@@ -48,13 +51,23 @@ public class GoodsSellRecordDialog extends JDialog{
 		table.getColumnModel().getColumn(2).setPreferredWidth(150);
 		table.getColumnModel().getColumn(3).setPreferredWidth(80);
 		table.getColumnModel().getColumn(4).setPreferredWidth(150);
+		int totalSold = 0;
+		double totalMoney = 0;
+		for (int i = 0; i < records.size(); i++) {
+			totalSold += records.get(i).getAmount();
+			totalMoney += records.get(i).getSoldPrice();
+		}
+		lbTotal.setText("Sold quantity: " + totalSold + ", Sold money: $" + String.format(ConstantValue.FORMAT_DOUBLE, totalMoney));
 		JScrollPane jspTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		JButton btnCancel = new JButton("Close");
 		JPanel pButton = new JPanel();
 		pButton.add(btnCancel);
+		JPanel pData = new JPanel(new BorderLayout());
+		pData.add(jspTable, BorderLayout.CENTER);
+		pData.add(lbTotal, BorderLayout.SOUTH);
 		Container c = this.getContentPane();
 		c.setLayout(new BorderLayout());
-		c.add(jspTable, BorderLayout.CENTER);
+		c.add(pData, BorderLayout.CENTER);
 		c.add(pButton, BorderLayout.SOUTH);
 		setLocation((int)(parent.getWidth() / 2 - this.getWidth() /2 + parent.getLocation().getX()), 
 				(int)(parent.getHeight() / 2 - this.getHeight() / 2 + parent.getLocation().getY()));
@@ -101,7 +114,7 @@ public class GoodsSellRecordDialog extends JDialog{
 			case 3:
 				return r.getAmount();
 			case 4: 
-				return r.getSoldPrice();
+				return String.format(ConstantValue.FORMAT_DOUBLE,r.getSoldPrice());
 			}
 			return "";
 		}
