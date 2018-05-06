@@ -93,7 +93,7 @@ public class MemberBalanceRecordDialog extends JDialog{
 			case 1:
 				return r.getPlace();
 			case 2:
-				return r.getAmount();
+				return String.format(ConstantValue.FORMAT_DOUBLE, r.getAmount());
 			case 3:
 				if (r.getType() == ConstantValue.MEMBERDEPOSIT_CONSUM)
 					return "Consume";
@@ -104,7 +104,7 @@ public class MemberBalanceRecordDialog extends JDialog{
 				else if (r.getType() == ConstantValue.MEMBERDEPOSIT_ADJUST)
 					return "Adjust";
 			case 4: 
-				return r.getNewValue();
+				return String.format(ConstantValue.FORMAT_DOUBLE, r.getNewValue());
 			}
 			return "";
 		}

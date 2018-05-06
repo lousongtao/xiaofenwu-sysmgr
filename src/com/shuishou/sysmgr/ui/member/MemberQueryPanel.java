@@ -138,7 +138,7 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 	
 	private void doQuery(){
 		members.clear();
-		((TableModel)table.getModel()).setRowCount(0);
+//		((TableModel)table.getModel()).setRowCount(0);
 		String url = "member/querymember";
 		Map<String, String> params = new HashMap<>();
 		params.put("userId", MainFrame.getLoginUser().getId() + "");
@@ -166,7 +166,8 @@ public class MemberQueryPanel extends JPanel implements ActionListener{
 			return;
 		}
 		members = result.data;
-		table.updateUI();
+//		table.updateUI();
+		model.fireTableDataChanged();
 	}
 	
 	
