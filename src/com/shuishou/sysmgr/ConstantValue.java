@@ -109,6 +109,8 @@ public class ConstantValue {
 	
 	public static final int STATISTICS_PERIODSELL_PERDAY = 1;
 	public static final int STATISTICS_PERIODSELL_PERHOUR = 2;
+	public static final int STATISTICS_PERIODSELL_PERWEEK = 3;
+	public static final int STATISTICS_PERIODSELL_PERMONTH = 4;
 	
 	public static final String TICKET_TEMPLATE_PURCHASE = "/purchase_ticket.json";
 	public static final String TICKET_TEMPLATE_REFUND = "/refund_ticket.json";

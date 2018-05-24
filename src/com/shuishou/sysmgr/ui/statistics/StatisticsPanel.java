@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
@@ -56,6 +57,7 @@ import com.shuishou.sysmgr.beans.StatItem;
 import com.shuishou.sysmgr.http.HttpUtil;
 import com.shuishou.sysmgr.ui.MainFrame;
 import com.shuishou.sysmgr.ui.components.JDatePicker;
+import com.shuishou.sysmgr.ui.components.WaitDialog;
 
 public class StatisticsPanel extends JPanel implements ActionListener{
 	private final Logger logger = Logger.getLogger(StatisticsPanel.class.getName());
@@ -75,6 +77,8 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 	private JRadioButton rbSellByCategory2 = new JRadioButton(Messages.getString("StatisticsPanel.ByCategory2"));
 	private JRadioButton rbSellByPeriodPerDay = new JRadioButton(Messages.getString("StatisticsPanel.PerDay"));
 	private JRadioButton rbSellByPeriodPerHour = new JRadioButton(Messages.getString("StatisticsPanel.PerHour"));
+	private JRadioButton rbSellByPeriodPerWeek = new JRadioButton(Messages.getString("StatisticsPanel.PerWeek"));
+	private JRadioButton rbSellByPeriodPerMonth = new JRadioButton(Messages.getString("StatisticsPanel.PerMonth"));
 	private JCheckBox cbHideEmptyPeriod = new JCheckBox(Messages.getString("StatisticsPanel.HideEmpty"), true);
 	private JButton btnToday = new JButton(Messages.getString("StatisticsPanel.Today"));
 	private JButton btnYesterday = new JButton(Messages.getString("StatisticsPanel.Yesterday"));
@@ -82,8 +86,8 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 	private JButton btnLastWeek = new JButton(Messages.getString("StatisticsPanel.Lastweek"));
 	private JButton btnThisMonth = new JButton(Messages.getString("StatisticsPanel.Thismonth"));
 	private JButton btnLastMonth = new JButton(Messages.getString("StatisticsPanel.Lastmonth"));
-	private JButton btnQuery = new JButton("Query");
-	private JButton btnExportExcel = new JButton("Export");
+	private JButton btnQuery = new JButton(Messages.getString("StatisticsPanel.Query"));
+	private JButton btnExportExcel = new JButton(Messages.getString("StatisticsPanel.Export"));
 	private JTable tabReport = new JTable();
 	private JPanel pDimensionParam = new JPanel(new CardLayout());
 	private JPanel pChart = new JPanel(new GridLayout(0, 1));
@@ -99,14 +103,14 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 	
 	private void initUI(){
 		tabReport.setAutoCreateRowSorter(false);
-		JPanel pReport = new JPanel(new GridLayout());
+		JPanel pReport = new JPanel(new BorderLayout());
 		JScrollPane jspTable = new JScrollPane(tabReport, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JPanel pData = new JPanel(new BorderLayout());
 		pData.add(jspTable, BorderLayout.CENTER);
 		pData.add(lbTotalInfo, BorderLayout.SOUTH);
 		JScrollPane jspChart = new JScrollPane(pChart, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		pReport.add(pData);
-		pReport.add(jspChart);
+		pReport.add(pData, BorderLayout.WEST);
+		pReport.add(jspChart, BorderLayout.CENTER);
 		
 		ButtonGroup bgDimension = new ButtonGroup();
 		bgDimension.add(rbPayway);
@@ -121,6 +125,8 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 		ButtonGroup bgSellPeriod = new ButtonGroup();
 		bgSellPeriod.add(rbSellByPeriodPerDay);
 		bgSellPeriod.add(rbSellByPeriodPerHour);
+		bgSellPeriod.add(rbSellByPeriodPerWeek);
+		bgSellPeriod.add(rbSellByPeriodPerMonth);
 		rbSellByPeriodPerDay.setSelected(true);
 		
 		JPanel pSellGranularity = new JPanel(new GridLayout(0, 1));
@@ -129,11 +135,13 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 		pSellGranularity.add(rbSellByCategory2);
 		pSellGranularity.add(rbSellByCategory1);
 		
-		JPanel pSellByPeriod = new JPanel(new GridLayout(0, 1));
+		JPanel pSellByPeriod = new JPanel(new GridBagLayout());
 		pSellByPeriod.setBorder(BorderFactory.createTitledBorder(Messages.getString("StatisticsPanel.SellByPeroid")));
-		pSellByPeriod.add(rbSellByPeriodPerDay);
-		pSellByPeriod.add(rbSellByPeriodPerHour);
-		pSellByPeriod.add(cbHideEmptyPeriod);
+		pSellByPeriod.add(rbSellByPeriodPerDay, 	new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
+		pSellByPeriod.add(rbSellByPeriodPerHour, 	new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
+		pSellByPeriod.add(rbSellByPeriodPerWeek, 	new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
+		pSellByPeriod.add(rbSellByPeriodPerMonth, 	new GridBagConstraints(1, 1, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
+		pSellByPeriod.add(cbHideEmptyPeriod,		new GridBagConstraints(0, 2, 2, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
 		
 		pDimensionParam.add(new JLabel(), CARDLAYOUT_PAYWAY);
 		pDimensionParam.add(pSellGranularity, CARDLAYOUT_SELL);
@@ -197,7 +205,7 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 			return;
 		}
 		String url = "statistics/statistics";
-		Map<String, String> params = new HashMap<>();
+		final Map<String, String> params = new HashMap<>();
 		params.put("userId", MainFrame.getLoginUser().getId() + "");
 		if (dpStartDate.getModel() != null && dpStartDate.getModel().getValue() != null){
 			Calendar c = (Calendar)dpStartDate.getModel().getValue();
@@ -230,9 +238,19 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 				params.put("sellByPeriod", ConstantValue.STATISTICS_PERIODSELL_PERDAY+"");
 			} else if (rbSellByPeriodPerHour.isSelected()){
 				params.put("sellByPeriod", ConstantValue.STATISTICS_PERIODSELL_PERHOUR+"");
+			} else if (rbSellByPeriodPerWeek.isSelected()){
+				params.put("sellByPeriod", ConstantValue.STATISTICS_PERIODSELL_PERWEEK+"");
+			} else if (rbSellByPeriodPerMonth.isSelected()){
+				params.put("sellByPeriod", ConstantValue.STATISTICS_PERIODSELL_PERMONTH+"");
 			}
 		}
-		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params);
+		final String finalurl = url;
+		WaitDialog wdlg = new WaitDialog(mainFrame, "Collecting data..."){
+			public Object work() {
+				return HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + finalurl, params);
+			}
+		};
+		String response = (String)wdlg.getReturnResult();
 		if (response == null){
 			logger.error("get null from server for statistics. URL = " + url + ", param = "+ params);
 			JOptionPane.showMessageDialog(this, "get null from server for statistics. URL = " + url);
@@ -329,13 +347,28 @@ public class StatisticsPanel extends JPanel implements ActionListener{
         //应用主题样式  
         ChartFactory.setChartTheme(mChartTheme);  
 		pChart.removeAll();
-		DefaultPieDataset pieDataset = new DefaultPieDataset();
+		JTabbedPane tab = new JTabbedPane();
+		
+		DefaultPieDataset pieMoneyDataset = new DefaultPieDataset();
+		DefaultPieDataset pieAmountDataset = new DefaultPieDataset();
+		DefaultCategoryDataset barMoneyDataset = new DefaultCategoryDataset();
+		DefaultCategoryDataset barAmountDataset = new DefaultCategoryDataset();
 		for (int i = 0; i < items.size(); i++) {
-			pieDataset.setValue(items.get(i).itemName, items.get(i).paidPrice);
+			StatItem si = items.get(i);
+			pieMoneyDataset.setValue(si.itemName, si.paidPrice);
+			pieAmountDataset.setValue(si.itemName, si.soldAmount);
+			barMoneyDataset.setValue(si.paidPrice, si.itemName, "");
+			barAmountDataset.setValue(si.soldAmount, si.itemName, "");
 		}
-		JFreeChart chart = ChartFactory.createPieChart(Messages.getString("StatisticsPanel.Payway"),pieDataset,true, true, false);
-		ChartPanel cp = new ChartPanel(chart);
-		pChart.add(cp);
+		JFreeChart pie_money = ChartFactory.createPieChart("", pieMoneyDataset,true, true, false);
+		JFreeChart pie_amount = ChartFactory.createPieChart("", pieAmountDataset, true, true, false);
+		JFreeChart bar_money = ChartFactory.createBarChart("", "", "", barMoneyDataset);
+		JFreeChart bar_amount = ChartFactory.createBarChart("", "", "", barAmountDataset);
+		tab.addTab("Money - Pie", new ChartPanel(pie_money));
+		tab.addTab("Money - Bar", new ChartPanel(bar_money));
+		tab.addTab("Amount - Pie", new ChartPanel(pie_amount));
+		tab.addTab("Amount - Bar", new ChartPanel(bar_amount));
+		pChart.add(tab);
 		pChart.updateUI();
 	}
 	
@@ -351,22 +384,32 @@ public class StatisticsPanel extends JPanel implements ActionListener{
         //应用主题样式  
         ChartFactory.setChartTheme(mChartTheme);  
 		pChart.removeAll();
-		DefaultPieDataset pieDataset = new DefaultPieDataset();
-		DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
+		JTabbedPane tab = new JTabbedPane();
+		
+		DefaultPieDataset pieMoneyDataset = new DefaultPieDataset();
+		DefaultCategoryDataset barMoneyDataset = new DefaultCategoryDataset();
+		DefaultPieDataset pieAmountDataset = new DefaultPieDataset();
+		DefaultCategoryDataset barAmountDataset = new DefaultCategoryDataset();
 		for (int i = 0; i < items.size(); i++) {
-			pieDataset.setValue(items.get(i).itemName, items.get(i).totalPrice);
-			barDataset.setValue(items.get(i).totalPrice, items.get(i).itemName, "");
+			StatItem si = items.get(i);
+			pieMoneyDataset.setValue(si.itemName, si.totalPrice);
+			barMoneyDataset.setValue(si.totalPrice, si.itemName, "");
+			pieAmountDataset.setValue(si.itemName, si.soldAmount);
+			barAmountDataset.setValue(si.soldAmount, si.itemName, "");
 		}
-		JFreeChart pieChart = ChartFactory.createPieChart(Messages.getString("StatisticsPanel.Sell"),pieDataset,true, true, false);
-		pieChart.removeLegend();
-		ChartPanel cpPie = new ChartPanel(pieChart);
-		pChart.add(cpPie);
-		
-		
-		JFreeChart barChart = ChartFactory.createBarChart(Messages.getString("StatisticsPanel.Sell"), "goods", "sold", barDataset);
-		barChart.removeLegend();
-		ChartPanel cpBar = new ChartPanel(barChart);
-		pChart.add(cpBar);
+		JFreeChart pie_money = ChartFactory.createPieChart("", pieMoneyDataset,true, true, false);
+		JFreeChart bar_money = ChartFactory.createBarChart("", "goods", "sold", barMoneyDataset);
+		JFreeChart pie_amount = ChartFactory.createPieChart("", pieAmountDataset,true, true, false);
+		JFreeChart bar_amount = ChartFactory.createBarChart("", "goods", "sold", barAmountDataset);
+		pie_money.removeLegend();
+		bar_money.removeLegend();
+		pie_amount.removeLegend();
+		bar_amount.removeLegend();
+		tab.addTab("Money - Pie", new ChartPanel(pie_money));
+		tab.addTab("Money - Bar", new ChartPanel(bar_money));
+		tab.addTab("Amount - Pie", new ChartPanel(pie_amount));
+		tab.addTab("Amount - Bar", new ChartPanel(bar_amount));
+		pChart.add(tab);
 		pChart.updateUI();
 	}
 	
@@ -382,21 +425,32 @@ public class StatisticsPanel extends JPanel implements ActionListener{
         //应用主题样式  
         ChartFactory.setChartTheme(mChartTheme);  
 		pChart.removeAll();
-		DefaultPieDataset pieDataset = new DefaultPieDataset();
-		DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
-		for (int i = 0; i < items.size(); i++) {
-			pieDataset.setValue(items.get(i).itemName, items.get(i).totalPrice);
-			barDataset.setValue(items.get(i).totalPrice, items.get(i).itemName, "");
-		}
-		JFreeChart pieChart = ChartFactory.createPieChart(Messages.getString("StatisticsPanel.Payway"),pieDataset,true, true, false);
-		pieChart.removeLegend();
-		ChartPanel cpPie = new ChartPanel(pieChart);
-		pChart.add(cpPie);
+		JTabbedPane tab = new JTabbedPane();
 		
-		JFreeChart barChart = ChartFactory.createBarChart(Messages.getString("StatisticsPanel.Sell"), "goods", "sold", barDataset);
-		barChart.removeLegend();
-		ChartPanel cpBar = new ChartPanel(barChart);
-		pChart.add(cpBar);
+		DefaultPieDataset pieMoneyDataset = new DefaultPieDataset();
+		DefaultCategoryDataset barMoneyDataset = new DefaultCategoryDataset();
+		DefaultPieDataset pieAmountDataset = new DefaultPieDataset();
+		DefaultCategoryDataset barAmountDataset = new DefaultCategoryDataset();
+		for (int i = 0; i < items.size(); i++) {
+			StatItem si = items.get(i);
+			pieMoneyDataset.setValue(si.itemName, si.totalPrice);
+			barMoneyDataset.setValue(si.totalPrice, si.itemName, "");
+			pieAmountDataset.setValue(si.itemName, si.soldAmount);
+			barAmountDataset.setValue(si.soldAmount, si.itemName, "");
+		}
+		JFreeChart pie_money = ChartFactory.createPieChart("", pieMoneyDataset,true, true, false);
+		JFreeChart bar_money = ChartFactory.createBarChart("", "goods", "sold", barMoneyDataset);
+		JFreeChart pie_amount = ChartFactory.createPieChart("", pieAmountDataset,true, true, false);
+		JFreeChart bar_amount = ChartFactory.createBarChart("", "goods", "sold", barAmountDataset);
+		pie_money.removeLegend();
+		bar_money.removeLegend();
+		pie_amount.removeLegend();
+		bar_amount.removeLegend();
+		tab.addTab("Money - Pie", new ChartPanel(pie_money));
+		tab.addTab("Money - Bar", new ChartPanel(bar_money));
+		tab.addTab("Amount - Pie", new ChartPanel(pie_amount));
+		tab.addTab("Amount - Bar", new ChartPanel(bar_amount));
+		pChart.add(tab);
 		pChart.updateUI();
 	}
 	
