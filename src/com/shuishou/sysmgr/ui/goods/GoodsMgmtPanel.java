@@ -504,6 +504,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		
 		//refresh local data
 		mainFrame.reloadListCategory1s();
+		category1s = mainFrame.getListCategory1s();
 		pCategory2.refreshCategory1List();
 		this.valueChanged(null);//refresh the property panel value
 	}
@@ -540,6 +541,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		
 		//refresh local data
 		mainFrame.reloadListCategory1s();
+		category1s = mainFrame.getListCategory1s();
 		pGoods.refreshCategory2List();
 		this.valueChanged(null);//refresh the property panel value
 	}
@@ -575,6 +577,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		goodsTree.updateUI();
 		//refresh local data
 		mainFrame.reloadListCategory1s();
+		category1s = mainFrame.getListCategory1s();
 		this.valueChanged(null);//refresh the property panel value
 	}
 	
@@ -614,6 +617,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		
 		// refresh local data
 		mainFrame.reloadListCategory1s();
+		category1s = mainFrame.getListCategory1s();
 		pCategory2.refreshCategory1List();
 		this.valueChanged(null);//refresh the property panel value
 	}
@@ -655,6 +659,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		goodsTree.updateUI();
 		// refresh local data
 		mainFrame.reloadListCategory1s();
+		category1s = mainFrame.getListCategory1s();
 		pGoods.refreshCategory2List();
 		this.valueChanged(null);//refresh the property panel value
 	}
@@ -696,6 +701,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		goodsTree.updateUI();
 		// refresh local data
 		mainFrame.reloadListCategory1s();
+		category1s = mainFrame.getListCategory1s();
 		this.valueChanged(null);//refresh the property panel value
 	}
 	
@@ -729,6 +735,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		((DefaultTreeModel)goodsTree.getModel()).removeNodeFromParent(node);
 		// refresh local data
 		mainFrame.reloadListCategory1s();
+		category1s = mainFrame.getListCategory1s();
 		pCategory2.refreshCategory1List();
 	}
 
@@ -762,6 +769,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		((DefaultTreeModel)goodsTree.getModel()).removeNodeFromParent(node);
 		// refresh local data
 		mainFrame.reloadListCategory1s();
+		category1s = mainFrame.getListCategory1s();
 	}
 	
 	private void onDeleteGoods(GoodsTreeNode node){
@@ -790,6 +798,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		((DefaultTreeModel)goodsTree.getModel()).removeNodeFromParent(node);
 		// refresh local data
 		mainFrame.reloadListCategory1s();
+		category1s = mainFrame.getListCategory1s();
 	}
 
 	public ArrayList<Category1> getCategory1s() {

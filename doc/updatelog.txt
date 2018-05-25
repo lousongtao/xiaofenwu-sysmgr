@@ -6,3 +6,4 @@
 
 20180525
 1.statistics orders by WEEK & MONTH
+2. correct the bug that cannot find the new goods from goods tree, it must restart the app to load whole tree before.
