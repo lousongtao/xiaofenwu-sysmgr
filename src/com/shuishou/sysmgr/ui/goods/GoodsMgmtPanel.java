@@ -383,7 +383,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 			HttpResult<Goods> result = gson.fromJson(response, new TypeToken<HttpResult<Goods>>(){}.getType());
 			if (!result.success){
 				logger.error("return false while change goods amount. URL = " + url + ", response = "+response);
-				JOptionPane.showMessageDialog(this, "return false while change goods amount. URL = " + url + ", response = "+response);
+				JOptionPane.showMessageDialog(this, result.result);
 				return;
 			}
 			goods.setLeftAmount(dlg.inputInteger);
@@ -729,7 +729,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		HttpResult<HashMap<String, String>> result = gson.fromJson(response, new TypeToken<HttpResult<HashMap<String, String>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while delete category1. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while delete category1. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		((DefaultTreeModel)goodsTree.getModel()).removeNodeFromParent(node);
@@ -763,7 +763,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		HttpResult<HashMap<String, String>> result = gson.fromJson(response, new TypeToken<HttpResult<HashMap<String, String>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while delete category2. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while delete category2. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		((DefaultTreeModel)goodsTree.getModel()).removeNodeFromParent(node);
@@ -792,7 +792,7 @@ public class GoodsMgmtPanel extends JPanel implements TreeSelectionListener, Act
 		HttpResult<HashMap<String, String>> result = gson.fromJson(response, new TypeToken<HttpResult<HashMap<String, String>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while delete goods. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while delete goods. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		((DefaultTreeModel)goodsTree.getModel()).removeNodeFromParent(node);

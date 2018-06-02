@@ -122,7 +122,7 @@ public class MemberUpgradePanel extends JPanel implements CommonDialogOperatorIF
 		HttpResult<MemberUpgrade> result = gson.fromJson(response, new TypeToken<HttpResult<MemberUpgrade>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while add/update memberupgrade. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while add/update memberupgrade. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return false;
 		}
 		if (memberUpgrade == null){

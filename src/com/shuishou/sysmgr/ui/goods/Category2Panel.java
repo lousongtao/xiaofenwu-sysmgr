@@ -122,7 +122,7 @@ public class Category2Panel extends JPanel implements CommonDialogOperatorIFC{
 		HttpResult<Category2> result = gson.fromJson(response, new TypeToken<HttpResult<Category2>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while add/update category2. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while add/update category2. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return false;
 		}
 		result.data.setCategory1((Category1)cbCategory1.getSelectedItem());//server don't return the parent

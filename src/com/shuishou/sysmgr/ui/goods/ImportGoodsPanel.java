@@ -117,7 +117,7 @@ public class ImportGoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		HttpResult<Goods> result = gson.fromJson(response, new TypeToken<HttpResult<Goods>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while import goods. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while import goods. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return false;
 		}
 		result.data.setCategory2(goods.getCategory2());

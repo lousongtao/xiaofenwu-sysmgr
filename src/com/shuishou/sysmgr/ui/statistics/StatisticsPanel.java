@@ -259,7 +259,7 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 		HttpResult<ArrayList<StatItem>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<StatItem>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while statistics. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while statistics. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		if (rbPayway.isSelected()){

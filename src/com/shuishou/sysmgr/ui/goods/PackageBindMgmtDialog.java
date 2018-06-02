@@ -121,7 +121,7 @@ public class PackageBindMgmtDialog extends JDialog implements ActionListener{
 		HttpResult<ArrayList<PackageBind>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<PackageBind>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query package bind. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while query package bind. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		model.setData(result.data);
@@ -151,7 +151,7 @@ public class PackageBindMgmtDialog extends JDialog implements ActionListener{
 		HttpResult<String> result = gson.fromJson(response, new TypeToken<HttpResult<String>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while delete package bind. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while delete package bind. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		model.deleteRow(modelRow);

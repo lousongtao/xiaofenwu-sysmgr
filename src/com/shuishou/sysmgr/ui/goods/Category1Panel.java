@@ -87,7 +87,7 @@ public class Category1Panel extends JPanel implements CommonDialogOperatorIFC{
 		HttpResult<Category1> result = gson.fromJson(response, new TypeToken<HttpResult<Category1>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while add/update category1. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while add/update category1. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return false;
 		}
 		//update parent goods tree

@@ -220,7 +220,7 @@ public class PromotionDialog extends JDialog implements ActionListener {
 		HttpResult<Promotion> result = gson.fromJson(response, new TypeToken<HttpResult<Promotion>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while add/update promotion. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while add/update promotion. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		parent.refreshData();

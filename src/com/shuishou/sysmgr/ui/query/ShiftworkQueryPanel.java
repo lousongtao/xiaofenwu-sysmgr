@@ -130,7 +130,7 @@ public class ShiftworkQueryPanel extends JPanel implements ActionListener{
 		HttpResult<ArrayList<ShiftWork>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<ShiftWork>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query shiftwork. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while query shiftwork. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		listShiftwork = result.data;
@@ -155,7 +155,7 @@ public class ShiftworkQueryPanel extends JPanel implements ActionListener{
 		HttpResult<ArrayList<Indent>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<Indent>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query indent by shiftwork. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while query indent by shiftwork. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		ArrayList<Indent> indents = result.data;

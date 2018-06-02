@@ -105,7 +105,7 @@ public class ChangePasswordDialog extends JDialog implements ActionListener {
 		HttpResult<String> result = gson.fromJson(response, new TypeToken<HttpResult<String>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while change user password. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while change user password. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		setVisible(false);

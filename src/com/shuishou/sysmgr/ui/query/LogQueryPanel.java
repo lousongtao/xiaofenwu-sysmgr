@@ -141,7 +141,7 @@ public class LogQueryPanel extends JPanel implements ActionListener{
 		HttpResult<ArrayList<LogData>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<LogData>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query log. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while query log. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		logList = result.data;

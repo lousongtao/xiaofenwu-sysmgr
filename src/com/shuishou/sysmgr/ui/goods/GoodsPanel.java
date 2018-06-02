@@ -190,7 +190,7 @@ public class GoodsPanel extends JPanel implements CommonDialogOperatorIFC{
 		HttpResult<Goods> result = gson.fromJson(response, new TypeToken<HttpResult<Goods>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while add/update goods. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while add/update goods. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return false;
 		}
 		//the category2 info is null after get from server

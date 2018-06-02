@@ -261,7 +261,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<Category1>> result = new Gson().fromJson(response, new TypeToken<HttpResult<ArrayList<Category1>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while loading goods. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while loading goods. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		//repoint category2 and dishes to their parent
@@ -287,7 +287,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<UserData>> result = new Gson().fromJson(response, new TypeToken<HttpResult<ArrayList<UserData>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while loading user. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while loading user. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data;
@@ -303,7 +303,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<Permission>> result = new Gson().fromJson(response, new TypeToken<HttpResult<ArrayList<Permission>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while loading Permission. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while loading Permission. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data;
@@ -319,7 +319,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<PayWay>> result = new Gson().fromJson(response, new TypeToken<HttpResult<ArrayList<PayWay>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while loading pay way. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while loading pay way. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data;
@@ -335,7 +335,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<Promotion>> result = new Gson().fromJson(response, new TypeToken<HttpResult<ArrayList<Promotion>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while loading promotion. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while loading promotion. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data;
@@ -351,7 +351,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<DiscountTemplate>> result = new Gson().fromJson(response, new TypeToken<HttpResult<ArrayList<DiscountTemplate>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while loading Discount Template. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while loading Discount Template. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data;
@@ -367,7 +367,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<String>> result = new Gson().fromJson(response, new TypeToken<HttpResult<ArrayList<String>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while loading log type. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while loading log type. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data;
@@ -383,7 +383,7 @@ public class HttpUtil {
 		HttpResult<HashMap<String, String>> result = new Gson().fromJson(response, new TypeToken<HttpResult<HashMap<String, String>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while loading configs. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while loading configs. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data;
@@ -399,7 +399,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<GoodsSellRecord>> result = new Gson().fromJson(response, new TypeToken<HttpResult<ArrayList<GoodsSellRecord>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while loading goods sold record. URL = " + url + ", params = "+ params+", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while loading goods sold record. URL = " + url + ", params = "+ params + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data;
@@ -420,7 +420,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<Member>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<Member>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query member by membercard. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while query member by membercard. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data.get(0);
@@ -440,7 +440,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<Member>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<Member>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query all member. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while query all member. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data;
@@ -461,7 +461,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<MemberBalance>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberBalance>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query member balance. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while query member balance. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data;
@@ -482,7 +482,7 @@ public class HttpUtil {
 		HttpResult<ArrayList<MemberScore>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberScore>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query member score. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(parent, "return false while query member score. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(parent, result.result);
 			return null;
 		}
 		return result.data;

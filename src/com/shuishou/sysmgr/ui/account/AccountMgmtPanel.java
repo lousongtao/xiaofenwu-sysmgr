@@ -112,7 +112,7 @@ public class AccountMgmtPanel extends JPanel implements ActionListener{
 			HttpResult<String> result = gson.fromJson(response, new TypeToken<HttpResult<String>>(){}.getType());
 			if (!result.success){
 				logger.error("return false while remove user. URL = " + url + ", response = "+response);
-				JOptionPane.showMessageDialog(this, "return false while remove user. URL = " + url + ", response = "+response);
+				JOptionPane.showMessageDialog(this, result.result);
 				return;
 			}
 			refreshData();

@@ -153,7 +153,7 @@ public class ConfigsDialog extends JDialog implements ActionListener{
 		HttpResult<String> result = new Gson().fromJson(response, new TypeToken<HttpResult<String>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while save member management way. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while save member management way. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		mainFrame.loadConfigsMap();
@@ -180,7 +180,7 @@ public class ConfigsDialog extends JDialog implements ActionListener{
 		HttpResult<String> result = new Gson().fromJson(response, new TypeToken<HttpResult<String>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while save open cashdrawer code. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while save open cashdrawer code. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		mainFrame.getConfigsMap().put(ConstantValue.CONFIGS_OPENCASHDRAWERCODE, tfNewOpenCashdrawerCode.getText());
@@ -206,7 +206,7 @@ public class ConfigsDialog extends JDialog implements ActionListener{
 		HttpResult<String> result = new Gson().fromJson(response, new TypeToken<HttpResult<String>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while save branch name. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while save branch name. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		mainFrame.getConfigsMap().put(ConstantValue.CONFIGS_BRANCHNAME, tfBranchName.getText());

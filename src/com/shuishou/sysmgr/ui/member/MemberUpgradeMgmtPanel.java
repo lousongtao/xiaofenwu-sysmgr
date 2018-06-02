@@ -109,7 +109,7 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 		HttpResult<ArrayList<MemberUpgrade>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberUpgrade>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while query member upgrade. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while query member upgrade. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		memberUpgrades = result.data;
@@ -155,7 +155,7 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 		HttpResult<ArrayList<MemberUpgrade>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberUpgrade>>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while delete member upgrade. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while delete member upgrade. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		memberUpgrades.remove(modelRow);
@@ -189,7 +189,7 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 		HttpResult<MemberUpgrade> result = gson.fromJson(response, new TypeToken<HttpResult<MemberUpgrade>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while change member upgrade status. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while change member upgrade status. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		memberUpgrades.set(modelRow, result.data);

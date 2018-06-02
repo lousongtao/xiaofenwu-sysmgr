@@ -108,7 +108,7 @@ public class PayWayDialog extends JDialog implements ActionListener {
 		HttpResult<PayWay> result = gson.fromJson(response, new TypeToken<HttpResult<PayWay>>(){}.getType());
 		if (!result.success){
 			logger.error("return false while add/update pay way. URL = " + url + ", response = "+response);
-			JOptionPane.showMessageDialog(this, "return false while add/update pay way. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
 			return;
 		}
 		parent.refreshData();
