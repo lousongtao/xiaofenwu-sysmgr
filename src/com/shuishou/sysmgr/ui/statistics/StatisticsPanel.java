@@ -279,8 +279,10 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 				totalMoney += result.data.get(i).paidPrice;
 				totalAmount += result.data.get(i).soldAmount;
 			}
-			lbTotalInfo.setText("record : " + tabReport.getRowCount()
-					+ ", money : $" + String.format("%.2f", totalMoney) + ", amount : " + totalAmount);
+			lbTotalInfo.setText("record: " + tabReport.getRowCount()
+					+ ", money: $" + String.format("%.2f", totalMoney) + ", amount: " + totalAmount
+					+ ", average money: $" + String.format("%.2f", totalMoney / tabReport.getRowCount())
+					+ ", average amount: " + String.format("%.2f", (double)(totalAmount / tabReport.getRowCount())));
 		} else if (rbSell.isSelected()){
 			AbstractTableModel model = new StatSellModel(result.data);
 			tabReport.setModel(model);
@@ -300,8 +302,10 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 				totalAmount += result.data.get(i).soldAmount;
 				totalWeight += result.data.get(i).weight;
 			}
-			lbTotalInfo.setText("record : " + tabReport.getRowCount()
-					+ ", money : $" + String.format("%.2f", totalPrice) + ", amount : " + totalAmount);
+			lbTotalInfo.setText("record: " + tabReport.getRowCount()
+					+ ", money: $" + String.format("%.2f", totalPrice) + ", amount: " + totalAmount
+					+ ", average money: $" + String.format("%.2f", totalPrice / tabReport.getRowCount())
+					+ ", average amount: " + String.format("%.2f", (double)(totalAmount / tabReport.getRowCount())));
 		} else if (rbPeriodSell.isSelected()){
 			ArrayList<StatItem> sis = result.data;
 			if (cbHideEmptyPeriod.isSelected()){
@@ -330,8 +334,10 @@ public class StatisticsPanel extends JPanel implements ActionListener{
 				totalAmount += result.data.get(i).soldAmount;
 				totalWeight += result.data.get(i).weight;
 			}
-			lbTotalInfo.setText("record : " + tabReport.getRowCount()
-					+ ", money : $" + String.format("%.2f", totalMoney) + ", amount : " + totalAmount);
+			lbTotalInfo.setText("record: " + tabReport.getRowCount()
+					+ ", money: $" + String.format("%.2f", totalMoney) + ", amount: " + totalAmount
+					+ ", average money: $" + String.format("%.2f", totalMoney / tabReport.getRowCount())
+					+ ", average amount: " + String.format("%.2f", (double)(totalAmount / tabReport.getRowCount())));
 		}
 	}
 	
