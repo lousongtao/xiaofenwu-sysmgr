@@ -150,7 +150,8 @@ public class PromotionMgmtPanel extends JPanel implements ActionListener{
 					for(Category2 c2 : c1.getCategory2s()){
 						if (c2.getGoods() != null){
 							for(Goods g : c2.getGoods()){
-								return g.getName();
+								if (g.getId() == id)
+									return g.getName();
 							}
 						}
 					}
