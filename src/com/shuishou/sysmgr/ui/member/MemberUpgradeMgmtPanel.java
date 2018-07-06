@@ -118,7 +118,7 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 	
 	private void doAdd(){
 		MemberUpgradePanel p = new MemberUpgradePanel(this);
-		CommonDialog dlg = new CommonDialog(mainFrame, p, "Add Member", 300, 300);
+		CommonDialog dlg = new CommonDialog(mainFrame, p, "Add Member Upgrade Rule", 300, 300);
 		dlg.setVisible(true);
 	}
 
@@ -128,7 +128,7 @@ public class MemberUpgradeMgmtPanel extends JPanel implements ActionListener{
 		MemberUpgradePanel p = new MemberUpgradePanel(this);
 		int modelRow = table.convertRowIndexToModel(table.getSelectedRow());
 		p.setObjectValue(model.getObjectAt(modelRow));
-		CommonDialog dlg = new CommonDialog(mainFrame, p, "Update Member", 300, 300);
+		CommonDialog dlg = new CommonDialog(mainFrame, p, "Update Member Upgrade Rule", 300, 300);
 		dlg.setVisible(true);
 	}
 	
