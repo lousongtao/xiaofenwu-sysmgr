@@ -40,6 +40,7 @@ public class PromotionMgmtPanel extends JPanel implements ActionListener{
 	private JButton btnAdd = new JButton(Messages.getString("Add"));
 	private JButton btnModify = new JButton(Messages.getString("Modify"));
 	private JButton btnDelete = new JButton(Messages.getString("Delete"));
+	private JButton btnAvailable = new JButton("Available / Unavailable");
 	private ArrayList<Promotion> promotionList;
 	
 	public PromotionMgmtPanel(MainFrame mainFrame){
@@ -61,16 +62,19 @@ public class PromotionMgmtPanel extends JPanel implements ActionListener{
 		table.getColumnModel().getColumn(6).setPreferredWidth(80);
 		table.getColumnModel().getColumn(7).setPreferredWidth(200);
 		table.getColumnModel().getColumn(8).setPreferredWidth(80);
+		table.getColumnModel().getColumn(9).setPreferredWidth(100);
 		JScrollPane jspTable = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		JPanel pButtons = new JPanel();
 		pButtons.add(btnAdd);
 		pButtons.add(btnModify);
 		pButtons.add(btnDelete);
+		pButtons.add(btnAvailable);
 		
 		btnAdd.addActionListener(this);
 		btnModify.addActionListener(this);
 		btnDelete.addActionListener(this);
+		btnAvailable.addActionListener(this);
 		this.setLayout(new BorderLayout());
 		add(jspTable, BorderLayout.CENTER);
 		add(pButtons, BorderLayout.SOUTH);
@@ -95,7 +99,38 @@ public class PromotionMgmtPanel extends JPanel implements ActionListener{
 			PromotionDialog dlg = new PromotionDialog(mainFrame, this, "Modify Promotion");
 			dlg.setObject(model.getObjectAt(table.getSelectedRow()));
 			dlg.setVisible(true);
+		} else if (e.getSource() == btnAvailable){
+			doChangeAvailable();
 		}
+	}
+	
+	private void doChangeAvailable(){
+		if (table.getSelectedRow() < 0)
+			return;
+		Promotion p = model.getObjectAt(table.getSelectedRow());
+		if (JOptionPane.showConfirmDialog(this, 
+				"Do you want to change this promotion's status to " + (p.isAvailable() ? "UNAVAILABLE" : "AVAILABLE") +"?",
+				"Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION){
+			return;
+		}
+		Map<String, String> params = new HashMap<>();
+		params.put("userId", MainFrame.getLoginUser().getId() + "");
+		params.put("id", model.getObjectAt(table.getSelectedRow()).getId()+"");
+		String url = "promotion/changepromotionstatus";
+		String response = HttpUtil.getJSONObjectByPost(MainFrame.SERVER_URL + url, params);
+		if (response == null){
+			logger.error("get null from server for change promotion status. URL = " + url + ", param = "+ params);
+			JOptionPane.showMessageDialog(this, "get null from server for change promotion status. URL = " + url);
+			return;
+		}
+		Gson gson = new Gson();
+		HttpResult<Promotion> result = gson.fromJson(response, new TypeToken<HttpResult<Promotion>>(){}.getType());
+		if (!result.success){
+			logger.error("return false while change promotion status. URL = " + url + ", response = "+response);
+			JOptionPane.showMessageDialog(this, result.result);
+			return;
+		}
+		refreshData();
 	}
 	
 	private void doDelete(){
@@ -164,7 +199,7 @@ public class PromotionMgmtPanel extends JPanel implements ActionListener{
 	class PromotionTableModel extends AbstractTableModel{
 
 		private String[] header = new String[]{"Forbid Member Discount", "Object A Type", "Object A Name", "Object A Quantity", 
-				"Object B Type", "Object B Name", "Object B Quantity", "Reward Type", "Reword Value"};
+				"Object B Type", "Object B Name", "Object B Quantity", "Reward Type", "Reword Value", "Available"};
 		
 		public PromotionTableModel(){
 
@@ -216,12 +251,22 @@ public class PromotionMgmtPanel extends JPanel implements ActionListener{
 				if (p.getRewardType() == ConstantValue.PROMOTION_REWARD_BUYNDISCOUNT)
 					return "BUY A * n, GET PRICE DISCOUNT";
 				if (p.getRewardType() == ConstantValue.PROMOTION_REWARD_BUYNNEXTDISCOUNT)
-					return "BUY A * n, THE NEXT ONE GET PRICE REDUCE";
-				if (p.getRewardType() == ConstantValue.PROMOTION_REWARD_BUYNNEXTREDUCEPRICE)
 					return "BUY A * n, THE NEXT ONE GET DISCOUNT";
+				if (p.getRewardType() == ConstantValue.PROMOTION_REWARD_BUYNNEXTREDUCEPRICE)
+					return "BUY A * n, THE NEXT ONE GET PRICE REDUCE";
+				if (p.getRewardType() == ConstantValue.PROMOTION_REWARD_BUYNA_NEXTBREDUCEPRICE)
+					return "BUY A * n, THE NEXT B GET PRICE REDUCE";
+				if (p.getRewardType() == ConstantValue.PROMOTION_REWARD_BUYNA_NEXTBDISCOUNT)
+					return "BUY A * n, THE NEXT B GET DISCOUNT";
+				if (p.getRewardType() == ConstantValue.PROMOTION_REWARD_BUYNA_MB_ABDISCOUNT)
+					return "BUY A * n + 1 * B, THEN A & B GET DISCOUNT";
+				if (p.getRewardType() == ConstantValue.PROMOTION_REWARD_BUYNA_MB_ABREDUCEPRICE)
+					return "BUY A * n + 1 * B, THEN A & B GET PRICE REDUCE";
 				break;
 			case 8:
 				return p.getRewardValue();
+			case 9:
+				return p.isAvailable();
 			}
 			return "";
 		}

@@ -110,7 +110,7 @@ public class PromotionDialog extends JDialog implements ActionListener {
 		c.setLayout(new GridBagLayout());
 		c.add(cbForbidMemberDiscount, 	new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
 		c.add(pObjectA, 				new GridBagConstraints(0, 1, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
-//		c.add(pObjectB, 				new GridBagConstraints(1, 1, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
+		c.add(pObjectB, 				new GridBagConstraints(1, 1, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
 		c.add(pReward, 					new GridBagConstraints(0, 2, 2, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 0, 0), 0, 0));
 		c.add(btnSave, 			new GridBagConstraints(0, 4, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
 		c.add(btnCancel, 		new GridBagConstraints(1, 4, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(10, 10, 0, 0), 0, 0));
@@ -128,12 +128,20 @@ public class PromotionDialog extends JDialog implements ActionListener {
 		cbObjectAType.addItem(new ObjectType(ConstantValue.PROMOTION_GOODS, "Goods"));
 		cbObjectAType.setSelectedIndex(-1);
 		cbObjectAType.addActionListener(this);
+		cbObjectBType.addItem(new ObjectType(ConstantValue.PROMOTION_CATEGORY1, "Category1"));
+		cbObjectBType.addItem(new ObjectType(ConstantValue.PROMOTION_CATEGORY2, "Category2"));
+		cbObjectBType.addItem(new ObjectType(ConstantValue.PROMOTION_GOODS, "Goods"));
+		cbObjectBType.setSelectedIndex(-1);
+		cbObjectBType.addActionListener(this);
 		cbRewardType.addItem(new ObjectType(ConstantValue.PROMOTION_REWARD_BUYNDISCOUNT, "BUY A * n, GET PRICE DISCOUNT"));
 		cbRewardType.addItem(new ObjectType(ConstantValue.PROMOTION_REWARD_BUYNREDUCEPRICE, "BUY A * n, GET PRICE REDUCE"));
 		cbRewardType.addItem(new ObjectType(ConstantValue.PROMOTION_REWARD_BUYNNEXTDISCOUNT, "BUY A * n, THE NEXT ONE GET DISCOUNT"));
 		cbRewardType.addItem(new ObjectType(ConstantValue.PROMOTION_REWARD_BUYNNEXTREDUCEPRICE, "BUY A * n, THE NEXT ONE GET PRICE REDUCE"));
+		cbRewardType.addItem(new ObjectType(ConstantValue.PROMOTION_REWARD_BUYNA_NEXTBREDUCEPRICE, "BUY A * n, THE NEXT B GET PRICE REDUCE"));
+		cbRewardType.addItem(new ObjectType(ConstantValue.PROMOTION_REWARD_BUYNA_NEXTBDISCOUNT, "BUY A * n, THE NEXT B GET DISCOUNT"));
+		cbRewardType.addItem(new ObjectType(ConstantValue.PROMOTION_REWARD_BUYNA_MB_ABDISCOUNT, "BUY A * n + B * m, THEN A & B GET DISCOUNT"));
+		cbRewardType.addItem(new ObjectType(ConstantValue.PROMOTION_REWARD_BUYNA_MB_ABREDUCEPRICE, "BUY A * n + B * m, THEN A & B GET PRICE REDUCE"));
 		cbRewardType.setSelectedIndex(0);
-		
 	}
 	
 	private void refreshObjectA(){
@@ -171,17 +179,75 @@ public class PromotionDialog extends JDialog implements ActionListener {
 		} 
 	}
 	
-	private void doSave(){
+	private void refreshObjectB(){
+		cbObjectB.removeAllItems();
+		ArrayList<Category1> category1List = mainFrame.getListCategory1s();
+		if (((ObjectType)cbObjectBType.getSelectedItem()).id == ConstantValue.PROMOTION_CATEGORY1){
+			for (int i = 0; i < category1List.size(); i++) {
+				cbObjectB.addItem(new ObjectClass(category1List.get(i).getId(), category1List.get(i)));
+			}
+		} else if (((ObjectType)cbObjectBType.getSelectedItem()).id == ConstantValue.PROMOTION_CATEGORY2){
+			for (int i = 0; i < category1List.size(); i++) {
+				Category1 c1 = category1List.get(i);
+				if (c1.getCategory2s() != null){
+					for (int j = 0; j < c1.getCategory2s().size(); j++) {
+						Category2 c2 = c1.getCategory2s().get(j); 
+						cbObjectB.addItem(new ObjectClass(c2.getId(), c2));
+					}
+				}
+			}
+		} else if (((ObjectType)cbObjectBType.getSelectedItem()).id == ConstantValue.PROMOTION_GOODS){
+			for (int i = 0; i < category1List.size(); i++) {
+				Category1 c1 = category1List.get(i);
+				if (c1.getCategory2s() != null){
+					for (int j = 0; j < c1.getCategory2s().size(); j++) {
+						Category2 c2 = c1.getCategory2s().get(j);
+						if (c2.getGoods() != null){
+							for (int k = 0; k < c2.getGoods().size(); k++) {
+								Goods goods = c2.getGoods().get(k);
+								cbObjectB.addItem(new ObjectClass(goods.getId(), goods));
+							}
+						}
+					}
+				}
+			}
+		} 
+	}
+	
+	private boolean checkData(){
 		if (tfRewardValue.getText() == null || tfRewardValue.getText().length() == 0){
 			JOptionPane.showMessageDialog(this, "must input Reward Value");
-			return;
+			return false;
 		}
 		if (tfObjectAQuantity.getText() == null || tfObjectAQuantity.getText().length() == 0){
 			JOptionPane.showMessageDialog(this, "must input Object A Quantity");
-			return;
+			return false;
+		}
+		int quantityA = 0;
+		try{
+			quantityA = Integer.parseInt(tfObjectAQuantity.getText());
+		} catch(NumberFormatException e){}
+		if (quantityA == 0){
+			JOptionPane.showMessageDialog(this, "must input an integer more zero for Object A Quantity");
+			return false;
 		}
 		if (cbObjectA.getSelectedIndex() == -1){
 			JOptionPane.showMessageDialog(this, "must input Object A");
+			return false;
+		}
+		int quantityB = 0;
+		try{
+			quantityB = Integer.parseInt(tfObjectBQuantity.getText());
+		} catch(NumberFormatException e){}
+		if (cbObjectB.getSelectedIndex() > -1 && quantityB == 0){
+			JOptionPane.showMessageDialog(this, "must input an integer more zero for Object B Quantity");
+			return false;
+		}
+		return true;
+	}
+	
+	private void doSave(){
+		if (!checkData()){
 			return;
 		}
 		Map<String, String> params = new HashMap<>();
@@ -234,6 +300,14 @@ public class PromotionDialog extends JDialog implements ActionListener {
 		cbObjectA.setSelectedItem(new ObjectClass(promotion.getObjectAId(), ""));
 		tfObjectAQuantity.setText(promotion.getObjectAQuantity()+"");
 		tfRewardValue.setText(promotion.getRewardValue() + "");
+		if (promotion.getObjectBType() > 0){
+			cbObjectBType.setSelectedItem(new ObjectType(promotion.getObjectBType(), ""));
+		}
+		if (promotion.getObjectBId() > 0){
+			cbObjectB.setSelectedItem(new ObjectClass(promotion.getObjectBId(), ""));
+		}
+		if (promotion.getObjectBQuantity() >= 0)
+			tfObjectBQuantity.setText(promotion.getObjectBQuantity() + "");
 	}
 	
 	@Override
@@ -244,6 +318,8 @@ public class PromotionDialog extends JDialog implements ActionListener {
 			doSave();			
 		} else if (e.getSource() == cbObjectAType){
 			refreshObjectA();
+		} else if (e.getSource() == cbObjectBType){
+			refreshObjectB();
 		}
 	}
 	
